@@ -108,7 +108,21 @@ p{
 .mt-2{
     margin-top: 2rem;
 }
-
+.mt-4{
+    margin-top: 4rem;
+}
+.ml-1{
+    margin-right: 1rem;
+}
+.mb-2{
+    margin-bottom: 2rem;
+}
+.padding{
+    padding: 2rem 0;
+}
+.padding-s{
+    padding: 2rem, 0;
+}
 .btn{
     padding: 0.5em 20px;
     background:#F2C744;

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/forms.css">
+</head>
+
+<body>
+    <div class="formBg">
+        <div class="container logoArea row row__spread">
+            <div class="logo">
+                <h1>QuickCredit</h1>
+            </div>
+            <div class="stats row">
+                <div class="stats1n2 row">
+                    <div class="stat1">
+                        <h4>Number 1</h4>
+                        <p>In Nigeria</p>
+                    </div>
+                    <div class="stat2">
+                        <h4>Industry Standard</h4>
+                        <p>IS0-20022</p>
+                    </div>
+                </div>
+                <div class="apply">
+                    <button class="btn">Apply Loan</button>
+                </div>
+            </div>
+            <div class="navBtn">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+        </div>
+        <nav class=" container nav row row__spread col-11">
+            <div class=" col-6 col col__Center navLinks">
+                <ul class="row row__spread container">
+                    <li class="links"><a href="/index.html">Home</a></li>
+                    <li class="links"><a href="/index.html">Products</a></li>
+                    <li class="links"><a href="/index.html">FAQs</a></li>
+                    <li class="links"><a href="/index.html">Blog</a></li>
+                    <li class="links"><a href="/index.html">Our Mission</a></li>
+                </ul>
+            </div>
+            <form class="col-4 row col__center search">
+                <input type="search" name="search" id="search" placeholder="Search" class="col-11">
+                <button type="submit" class="col-1 ">
+                    <img src='./img/magnifying.png' />
+                </button>
+            </form>
+        </nav>
+        <div class=" col col__Center form">
+            <div class=" col-5">
+                <form action="/userdashboard.html" method="post" class="container validate">
+                    <fieldset>
+                        <legend class="legend"> Sign Up </legend>
+                        <div>
+                            <input type="email" id="email" placeholder="Email*" pattern="^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*$"
+                                required>
+                            <span class="error"></span>
+                        </div>
+                        <div>
+                            <input type="text" id="username" placeholder="Username*" required>
+                            <span class="error"></span>
+                        </div>
+                        <div>
+                            <input type="text" id="phone" placeholder="Phone" required>
+                            <span class="error"></span>
+                        </div>
+                        <div>
+                            <input type="password" id="passwd" placeholder="Password*" minlength="8" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$"
+                                title="Please include at least 1 uppercase character, 1 lowercase character, and 1 number."
+                                required>
+                            <span class="error"></span>
+                        </div>
+                        <div>
+                            <input type="password" id="cfpasswd" placeholder="Confirm Password*" minlength="8" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$"
+                                title="Please include at least 1 uppercase character, 1 lowercase character, and 1 number."
+                                required>
+                            <span class="error"></span>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="termsOfService" required> i accept <a href="/termsofservice.html">terms
+                                of service*</a>
+                            <span class="error"></span>
+                        </div>
+                        <a href="./userdashboard.html"><button class="btn col-12" type="submit">Submit Now</button></a>
+                        <p>Already have an account?<a href="./signin.html">Log In</a></p>
+                    </fieldset>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="js/myFormValidate.js"></script>
+</body>
+
+</html>

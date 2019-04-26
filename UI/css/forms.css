@@ -1,0 +1,70 @@
+.formBg{
+    background: #ccc url("../img/credit.jpg");
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: multiply;
+    height: 110vh;
+    color: #F2C744;
+}
+.form{
+    position: relative;
+    top: 3rem;
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 70%;
+}
+.form input[type=text],.form input[type=email],.form input[type=password]{
+    width: 100%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    color:#595959;
+    border-bottom: 2px solid #F2C744;
+    outline: none;
+}
+.form input[type=text]:active,.form input[type=email]:active,.form input[type=password]:active{
+    background: none;
+}
+
+.legend{
+    padding: 0.5em 20px;
+    background:#F2C744;
+    color: #595959;
+    font-size: 1.2rem;
+    border: none;
+}
+form  {
+    color:#595959;
+}
+form a{
+    color: #F2C744;
+    text-decoration: none;
+}
+.form input[type=checkbox] {
+    padding: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+.form fieldset{
+    background: #fff;
+    border: none;
+}
+.form legend{
+    padding: 20px auto ;
+    width: 90%;
+    margin:0 auto;
+    padding-left: 0;
+    text-align: center;
+}
+.form p{
+    text-align: center;
+    font-size: 0.8rem;
+}
+.form .btn{
+    margin-bottom: 1rem;
+}

@@ -151,3 +151,19 @@ tr:nth-child(odd){
     margin-bottom: 1rem;
     background-image: linear-gradient(to right top, #f2c744, #f1b735, #efa627, #ed951b, #eb8312);
 }
+.reject{
+    text-align: center;
+    background: #E95A53;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    padding: 0.7rem 1rem;
+}
+.approve{
+    text-align: center;
+    background: rgb(103, 245, 146);
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    padding: 0.7rem 1rem;
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>QuickCredit - Dashboard</title>
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
+</head>
+
+<body>
+    <div class=" col-12 row row__Spread">
+        <aside class="sidebar col-2">
+            <div class="logo row col__Center">
+                <h1>QuickCredit</h1>
+            </div>
+            <hr class="">
+            <div class="sideNav col row__spread col__Center">
+                <div>
+                    <ul class="">
+                        <li class="sideNavItem ">
+                            <a href="/apply.html" id="apply4loan">Apply For Loan</a>
+                        </li>
+                        <li class="sideNavItem ">
+                            <a href="/history.html">Loan History</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <ul class="">
+                        <li class="sideNavItem ">
+                            <a href="/signin.html">Log Out</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+        <section class="col-10 mainDashboard">
+            <div class="row row__spread container mainDashboard__header">
+                <div class="dhead col-3 row">
+                    <p>Dashboard | welcome David</p>
+                </div>
+                <div class="row dashNprofile col-8">
+                    <div class="row  ">
+
+                        <form class=" row col__center search dashNav">
+                            <input type="search" name="search" id="search" placeholder="Search" class="col-11">
+                            <button type="submit" class="col-1 ">
+                                <img src='./img/magnifying.png' />
+                            </button>
+                        </form>
+                        <div class="user circle"></div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div id="canvas">
+                <div class="container col row__Spread mt-2">
+                    <div class="card col-12">
+                        <div class="col col__Center cardBadge">
+                            LOAN REPAYMENT HISTORY
+                        </div>
+                        <table class="container col-11">
+                            <tr>
+                                <th>Loan Id</th>
+                                <th>Loan Tenure</th>
+                                <th>Applied Date</th>
+                                <th>Loan Status</th>
+                                <th>Total Paid</th>
+                                <th>Percentage(%) Complete</th>
+                            </tr>
+                            <tr>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0%</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script>
+
+    </script>
+</body>
+
+</html>

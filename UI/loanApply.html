@@ -2,7 +2,7 @@
     <div class="cardBadge col col__Center">
         LOAN APPLICATIONS
     </div>
-    <div class="container col-11 col col__Center mb-2">
+    <div class="container col-11 col col__Center  pb-2">
         <table class=" pb-2">
             <tr>
                 <th>Name</th>
@@ -17,7 +17,19 @@
             <tr>
                 <td>David Lorem</td>
                 <td>10, Lorem Ipsum, Nigeria</td>
-                <td><a href="/individual.html" id="individual1">#3443847344</a> </td>
+                <td>#3443847344</td>
+                <td>12 months</td>
+                <td>25/04/19</td>
+                <td>verified</td>
+                <td>#1,0000,000</td>
+                <td><a href=""><button class="approve"><img src="./img/approve.png" width="15px" height="13px" alt=""></button></a></td>
+                <td><a href=""><button class="reject col col__Center"><img src="./img/reject.png" width="15px" height="13px"
+                                alt=""></button></a></td>
+            </tr>
+            <tr>
+                <td>David Lorem</td>
+                <td>10, Lorem Ipsum, Nigeria</td>
+                <td>#3443847344</td>
                 <td>12 months</td>
                 <td>25/04/19</td>
                 <td>verified</td>
@@ -29,19 +41,7 @@
             <tr>
                 <td>David Lorem</td>
                 <td>10, Lorem Ipsum, Nigeria</td>
-                <td><a href="/individual.html">#3443847344</a> </td>
-                <td>12 months</td>
-                <td>25/04/19</td>
-                <td>verified</td>
-                <td>#1,0000,000</td>
-                <td><a href=""><button class="approve"><img src="./img/approve.png" width="15px" height="13px" alt=""></button></a></td>
-                <td><a href=""><a href=""><button class="reject col col__Center"><img src="./img/reject.png" width="15px"
-                                    height="13px" alt=""></button></a></td>
-            </tr>
-            <tr>
-                <td>David Lorem</td>
-                <td>10, Lorem Ipsum, Nigeria</td>
-                <td><a href="/individual.html">#3443847344</a> </td>
+                <td>#3443847344</td>
                 <td>12 months</td>
                 <td>25/04/19</td>
                 <td>verified</td>
@@ -54,13 +54,3 @@
     </div>
 
 </div>
-<script>
-    const individual1 = document.getElementById('individual1');
-    const individualUrl = 'individual.html';
-    individual1.addEventListener('click', (e) => {
-        e.preventDefault();
-        fetch(individualUrl)
-            .then((response) => { response.text() })
-            .then((data) => { individual1.setAttribute('data-html', data) });
-    }, false)
-</script>

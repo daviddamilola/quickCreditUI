@@ -1,0 +1,139 @@
+.sidebar h1 {
+color: #f2c744;
+}
+.dashNprofile{
+    justify-content: flex-end;
+}
+.dhead{
+    font-size: 0.8rem;
+}
+.dashNav{
+    padding: 0.1rem 1rem;
+}
+.mainDashboard__header{
+    padding-top: 1rem;
+}
+.sidebar{
+    background: #ccc url("../img/credit.jpg");
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    background-blend-mode: multiply;
+    box-sizing: border-box;
+    box-shadow: 3px 3px 20px #333;
+}
+.sideNav ul{
+    padding: 0;
+    margin: 0;
+}
+.sideNavItem{
+    text-align: center;
+    list-style: none;
+    padding: 1rem 0.2rem;
+}
+.sideNavItem a{
+    text-decoration: none;
+    color: #fff;
+}
+
+.circle{
+    border-radius: 50px;
+    border: 2px solid #f2c744;
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+    box-shadow: 2px 2px 10px #ccc;
+}
+.user{
+    background: url("../img/prof.png");
+    background-size: cover;
+    background-position: center;
+}
+.inputGrp{
+    justify-content: center;
+}
+
+.inputGrp input[type=text]{
+    width: 100%;
+    padding: 0.6rem 0.4rem;
+    margin-bottom: 8px;
+    border:1px solid #f2c744;
+    border-bottom: 3px solid #f2c744;
+    outline: none;
+}
+
+.inputGrp input[type=number]{
+    width: 100%;
+    padding: 0.6rem 0.4rem;
+    margin-bottom: 8px;
+    border:1px solid #f2c744;
+    border-bottom: 3px solid #f2c744;
+    outline: none;
+}
+.inputGrp input[type=date]{
+    width: 100%;
+    padding: 0.6rem 0.4rem;
+    margin-bottom: 8px;
+    border:1px solid #f2c744;
+    border-bottom: 3px solid #f2c744;
+    outline: none;
+}
+.inputGrp select{
+    -webkit-appearance: none; 
+   -moz-appearance: none;
+   appearance: none; 
+    width: 105%;
+    padding: 0.6rem 0.4rem;
+    margin-bottom: 8px;
+    border:1px solid #f2c744;
+    border-bottom: 3px solid #f2c744;
+    outline: none;
+}
+.mt-1{
+    margin-top: 1rem;
+}
+.mt-2{
+    margin-bottom: 1rem;
+}
+label{
+    font-size: 0.8rem;
+}
+.required{
+    color: red;
+}
+.card{
+    box-shadow: 3px 3px 10px rgb(149, 147, 147);
+    height: 10rem;
+    border-radius: 3px;
+}
+.cardBadge{
+    position: relative;
+    top: -10%;
+    width: 90%;
+    margin: 0 auto;
+    border-radius: 3px;
+    min-height: 50px;
+    text-align: center;
+    background-image: linear-gradient(to right top, #f2c744, #f1b735, #efa627, #ed951b, #eb8312);
+}
+.cardBadge p{
+    
+}
+.card table{
+    border-collapse: collapse;
+}
+.card tr{
+    font-size: 0.8rem;
+}
+.card td,.card th{
+    text-align: center;
+}
+th{
+    background-color: #ccc;
+}
+tr:nth-child(even){
+    background-color: #ecebbf;
+}
+tr:nth-child(odd){
+    background-color: rgb(248, 245, 229);
+}

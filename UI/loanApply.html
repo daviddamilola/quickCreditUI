@@ -17,7 +17,7 @@
             <tr>
                 <td>David Lorem</td>
                 <td>10, Lorem Ipsum, Nigeria</td>
-                <td>#3443847344</td>
+                <td><a href="/individual.html" id="individual1">#3443847344</a> </td>
                 <td>12 months</td>
                 <td>25/04/19</td>
                 <td>verified</td>
@@ -29,7 +29,7 @@
             <tr>
                 <td>David Lorem</td>
                 <td>10, Lorem Ipsum, Nigeria</td>
-                <td>#3443847344</td>
+                <td><a href="/individual.html">#3443847344</a> </td>
                 <td>12 months</td>
                 <td>25/04/19</td>
                 <td>verified</td>
@@ -41,7 +41,7 @@
             <tr>
                 <td>David Lorem</td>
                 <td>10, Lorem Ipsum, Nigeria</td>
-                <td>#3443847344</td>
+                <td><a href="/individual.html">#3443847344</a> </td>
                 <td>12 months</td>
                 <td>25/04/19</td>
                 <td>verified</td>
@@ -54,3 +54,13 @@
     </div>
 
 </div>
+<script>
+    const individual1 = document.getElementById('individual1');
+    const individualUrl = 'individual.html';
+    individual1.addEventListener('click', (e) => {
+        e.preventDefault();
+        fetch(individualUrl)
+            .then((response) => { response.text() })
+            .then((data) => { individual1.setAttribute('data-html', data) });
+    }, false)
+</script>

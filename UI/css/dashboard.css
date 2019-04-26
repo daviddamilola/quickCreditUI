@@ -122,13 +122,15 @@ label{
 }
 .card table{
     border-collapse: collapse;
+    padding: 0.5rem 0.6rem;
 }
-.card tr{
+ tr{
     font-size: 0.8rem;
 }
 .card td,.card th{
-    text-align: left;
+    text-align: center;
     border-left: 1px solid #ccc;
+    padding: 0.8rem 0.5rem;
 }
 th{
     background-color: #ccc;

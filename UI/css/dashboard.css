@@ -104,7 +104,7 @@ label{
 }
 .card{
     box-shadow: 3px 3px 10px rgb(149, 147, 147);
-    min-height: 10rem;
+    min-height: 15rem;
     border-radius: 3px;
 }
 .cardBadge{

@@ -179,3 +179,49 @@ tr:nth-child(odd){
     outline: none;
     padding: 0.7rem 1rem;
 }
+/* small screens */
+.pt{
+    padding-top: 0.5rem;
+}
+@media only screen and (max-width: 768px) {
+   .mainDashboard__header{
+       display:none;
+   }
+   .mainDasboard{
+       width: 100%;
+   }
+   .pt{
+    padding-top: 0.5rem;
+}
+.col-s-1 {width: 8.33%;}
+    .col-s-2 {width: 16.66%;}
+    .col-s-3 {width: 25%;}
+    .col-s-4 {width: 33.33%;}
+    .col-s-5 {width: 41.66%;}
+    .col-s-6 {width: 50%;}
+    .col-s-7 {width: 58.33%;}
+    .col-s-8 {width: 66.66%;}
+    .col-s-9 {width: 75%;}
+    .col-s-10 {width: 83.33%;}
+    .col-s-11 {width: 91.66%;}
+    .col-s-12 {width: 100%;}
+
+.mainDashboard_s_header{
+    width: 100%;
+}
+.line_s{
+    border: 2px solid #F2C744;
+    margin-bottom: 5px;
+    width: 25px;
+}
+.navBtn_s{
+    background: none;
+    border: none;
+    outline: none;
+}
+
+.navBtn_s:active{
+    box-shadow: 0 3px 10px rgb(238, 243, 133);
+    transform: translateY(4px);
+}
+}

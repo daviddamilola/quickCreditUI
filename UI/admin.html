@@ -103,6 +103,12 @@
                     canvas.innerHTML = data;
                 })
         }, false)
+        loanApply.addEventListener('click', (e) => {
+            e.preventDefault();
+            fetch(loanApplyUrl)
+                .then((response) => { return response.text() })
+                .then((data) => { canvas.innerHTML = data })
+        })
     </script>
 </body>
 

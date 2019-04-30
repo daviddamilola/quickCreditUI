@@ -30,6 +30,9 @@ p{
     border-top: 5px solid;
     margin-top: 2px;
   }
+  .mb-2{
+      margin-bottom: 2rem;
+  }
 .container{
     width: 90%;
     margin: 0 auto;
@@ -110,6 +113,9 @@ p{
 }
 .mt-4{
     margin-top: 4rem;
+}
+.mb-4{
+    margin-bottom: 4rem;
 }
 .ml-1{
     margin-right: 1rem;
@@ -278,6 +284,66 @@ border-bottom-width: 70%;
 .paddinglr{
     padding-left: 0.4rem;
     padding-right: 0.4rem;
+}
+#landingPage{
+    background: #595959 url("../img/credit-card.jpg");
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: multiply;
+    color: #F2C744;
+}
+.banner{
+    background: #ccc;
+}
+.requestCallBack{
+    background: #F2C744 url("../img/happy.jpg");
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: multiply;
+    color: #fff;
+    text-shadow: #595959;
+}
+.requestCallBackForm input{
+    background: none;
+    border:none;
+    border-bottom: 2px solid #F2C744;
+    color: #fff;
+    outline: none;
+}
+.requestCallBackForm input::placeholder{
+    color: #fff;
+}
+.requestCallBackForm textarea{
+    border: 2px solid #F2C744;
+    background: none;
+    outline: none;
+    color: #fff;
+}
+.requestCallBackForm textarea::placeholder{
+    color: #fff;
+}
+.quote{
+    font-size: 6rem;
+    padding: 0;
+    margin: 0;
+}
+.yoursFaithfully{
+    font-weight: bold;
+}
+.r-txt-align{
+    text-align: right;
+}
+footer{
+    background: #3d3d3d;
+    color: #F2C744;
+}
+.address ul{
+    padding: 0;
+    margin: 0;
+}
+footer li{
+    list-style: none;
 }
 @media only screen and (max-width: 768px) {
     /* For mobile phones: */

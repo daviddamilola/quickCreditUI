@@ -1,0 +1,31 @@
+{
+  "name": "quickcredit",
+  "version": "1.0.0",
+  "description": "Quick Credit is an online lending platform that provides short term soft loans to individuals.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daviddamilola/QuickCreditUI.git"
+  },
+  "keywords": [
+    "quickcredit",
+    "car\\",
+    "loans",
+    "house\\",
+    "loans"
+  ],
+  "author": "daviddamilola20@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/daviddamilola/QuickCreditUI/issues"
+  },
+  "homepage": "https://github.com/daviddamilola/QuickCreditUI#readme",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2"
+  }
+}

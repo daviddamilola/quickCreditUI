@@ -1,10 +1,10 @@
 import chai from 'chai';
 import supertest from 'supertest';
+import uuid from 'uuid/v4';
 import server from '../server';
 import auth from '../middleware/auth';
 import utils from '../utils/utills';
-import validate from '../utils/validate';
-import uuid from 'uuid/v4';
+
 const { expect } = chai;
 
 describe('signup route', () => {
@@ -97,10 +97,6 @@ describe('utilities', () => {
   it('hashPassword method of utils should return a hash', (done) => {
     expect(utils.hashPassword('password')).to.not.equal('password');
     expect(utils.hashPassword('password').length).to.be.gte(10);
-    done();
-  });
-  it('comparePassword method of utils should compare passwords with hash', (done) => {
-    expect(utils.comparePassword(utils.hashPassword('password'), utils.hashPassword('password'))).to.equal(true);
     done();
   });
 });

@@ -55,31 +55,5 @@ class UserHandler {
       },
     });
   }
-
-  static signin(req, res) {
-    if (req.method === 'get') {
-      res.status(200);
-      res.json({
-        status: 200,
-        data: {
-          message: 'sign in',
-        },
-      });
-    }
-
-    if (req.method === 'post') {
-      const { body } = req;
-      // validate the request body
-
-      const result = validate.validateLogin(body);
-      if (result.error) {
-        res.status(406).json({
-          status: 406,
-          error: result.error,
-        });
-      }
-      // hash the password
-    }
-  }
 }
 export default UserHandler;

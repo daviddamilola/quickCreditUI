@@ -1,12 +1,13 @@
 /* eslint linebreak-style: ["error", "windows"] */
 import express from 'express';
-
-const router = express.Router();
+import AuthHandler from '../../controllers/authHandler';
+// import UsersHandler from '../../controller/usersController';
+// import LoansHandler from '../../controller/LoansController';
+const app = express.Router();
 
 // Home page route.
-router.get('/auth/signup', (req, res) => {
-  res.status(200);
-  res.send('hello from api');
-});
+app.get('/auth/signup', AuthHandler.reqSignup);
+app.post('/auth/signup', AuthHandler.createUser);
 
-module.exports = router;
+
+export default app;

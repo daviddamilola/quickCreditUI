@@ -1,13 +1,10 @@
-import fs from 'fs';
-import usersjson from '../models/users.json';
+import users from '../models/usersDb';
 import validate from '../utils/validate';
-import path from '../models/users';
+
 import Util from '../utils/utills';
 import NewUser from '../models/newuser';
 import Authenticate from '../middleware/auth';
 
-const realPath = path.path;
-const users = Array.from(usersjson);
 class UserHandler {
   static reqSignup(req, res) {
     res.status(200);
@@ -43,13 +40,7 @@ class UserHandler {
         error: 'existent user',
       });
     }
-
-    let savejson = { users: [] };
-    const currentDb = fs.readFileSync(`${realPath}/users.json`, 'utf-8');
-    savejson = JSON.parse(currentDb);
-    savejson.push(userToBeCreated);
-    const json = JSON.stringify(savejson);
-    fs.writeFileSync(`${realPath}/users.json`, json);
+    users.push(userToBeCreated);
     const token = Authenticate.makeToken(
       userToBeCreated.id, userToBeCreated.email, userToBeCreated.isAdmin,
     );

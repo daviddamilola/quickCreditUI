@@ -1,12 +1,12 @@
 import chai from 'chai';
 import supertest from 'supertest';
-import uuid from 'uuid/v4';
-import usersJson from '../models/users.json';
+import users from '../models/usersDb';
+import loanHandler from '../controllers/loansHandler';
+import Loan from '../models/loans/Loan';
 import server from '../server';
 import auth from '../middleware/auth';
+import authorize from '../middleware/authorize';
 import utils from '../utils/utills';
-
-const users = Array.from(usersJson);
 
 const { expect } = chai;
 describe('User', () => {
@@ -114,13 +114,23 @@ describe('utilities', () => {
 
 /* authentication tests */
 describe('authentication', () => {
-  const id = uuid();
+  const id = users.length + 1;
   const password = 'randompas1623732834';
   const isAdmin = false;
   it('makeToken() should generate a new token for new user', (done) => {
     expect(auth.makeToken).to.be.an.instanceOf(Function);
     expect(auth.makeToken(id, password, isAdmin)).to.be.a('string');
     done();
+  });
+  it('should authorize user for a given route', (done) => {
+    supertest(server)
+      .get('/api/v1/loans')
+      .end((err, res) => {
+        expect(res.body).to.haveOwnProperty('error');
+        expect(res.status).to.be.equal(401);
+        expect(res.body.status).to.be.equal(401);
+        done();
+      });
   });
   it('should sign up a valid user and give that user a token', (done) => {
     supertest(server)
@@ -138,6 +148,13 @@ describe('authentication', () => {
         expect(body.data).to.haveOwnProperty('token');
         done();
       });
+  });
+});
+describe('authorisation', () => {
+  it('should be modular', (done) => {
+    expect(authorize).to.be.an.instanceOf(Object);
+    expect(authorize).to.haveOwnProperty('authorize');
+    done();
   });
 });
 
@@ -159,8 +176,8 @@ describe('signin route', () => {
     supertest(server)
       .post('/api/v1/auth/signin')
       .send({
-        email: 'works@gmail.com',
-        password: 'dummypass345',
+        email: 'works3@gmail.com',
+        password: 'weWork20',
       })
       .end((err, res) => {
         expect(res.body).to.be.an.instanceOf(Object);
@@ -169,5 +186,20 @@ describe('signin route', () => {
         expect(res.body).to.haveOwnProperty('data');
         done();
       });
+  });
+});
+
+describe('Loans', () => {
+  it('should be an object', (done) => {
+    expect(new Loan('g@g.com', 12, 3000)).to.be.an.instanceOf(Loan);
+    done();
+  });
+});
+
+describe('loansHandler', () => {
+  it('should have handlers for routes', (done) => {
+    expect(loanHandler).to.haveOwnProperty('reqLoan');
+    expect(loanHandler).to.haveOwnProperty('applyForLoan');
+    done();
   });
 });

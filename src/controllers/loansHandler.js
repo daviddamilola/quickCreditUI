@@ -16,6 +16,10 @@ class LoansHandler {
     // depending on the value of isAdmin it'll either return all loan application or the apply page
     if (targetUser.isAdmin === true) {
       // TODO
+      return res.json({
+        status: 200,
+        data: loans,
+      });
     }
     return res.json({
       status: 200,

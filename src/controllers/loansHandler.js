@@ -9,8 +9,14 @@ import validate from '../utils/validate';
 
 
 class LoansHandler {
-  // req loaan page
+  // req loan page
   static reqLoan(req, res) {
+    if (!res.locals.payload) {
+      res.json({
+        status: 401,
+        error: 'authentication failed, login again to get access',
+      });
+    }
     const decoded = res.locals.payload;
     const targetUser = users.find(user => user.email === decoded.payload.email);
     // depending on the value of isAdmin it'll either return all loan application or the apply page

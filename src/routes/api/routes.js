@@ -1,12 +1,11 @@
 /* eslint linebreak-style: ["error", "windows"] */
 import express from 'express';
 import AuthHandler from '../../controllers/authHandler';
-// import UsersHandler from '../../controller/usersController';
+import viewLoanHistory from '../../controllers/repayHandler';
 import authenticate from '../../middleware/authenticate';
 import LoansHandler from '../../controllers/loansHandler';
 import Authorizer from '../../middleware/authorize';
 
-const { authenticateUser } = authenticate;
 const { authorize } = Authorizer;
 const app = express.Router();
 
@@ -18,9 +17,11 @@ app.post('/auth/signin', AuthHandler.login);
 
 // user apply loan
 // authenticate that user exist then render the apply loan page
-app.get('/loans', authorize, authenticateUser, LoansHandler.reqLoan);
+app.get('/loans', authorize, authenticate, LoansHandler.reqLoan);
 // user post loan application, authenticate user then post loan application to loan db
-app.post('/loans', authorize, authenticateUser, LoansHandler.applyForLoan);
+app.post('/loans', authorize, authenticate, LoansHandler.applyForLoan);
+// user can view loan history
+app.get('/loans/:id/repayments', authorize, authenticate, viewLoanHistory.viewLoanHistory);
 // admin can verify user
 // app.patch('/api/v1/users/:email/verify', Authhandler.VerifyUser);
 export default app;

@@ -9,10 +9,13 @@ import Authorizer from '../../middleware/authorize';
 const { authorize } = Authorizer;
 const app = express.Router();
 
-// Home page route.
+// Auth route.
 app.get('/auth/signup', AuthHandler.reqSignup);
+
 app.post('/auth/signup', AuthHandler.createUser);
+
 app.get('/auth/signin', AuthHandler.reqSignin);
+
 app.post('/auth/signin', AuthHandler.login);
 
 // user apply loan

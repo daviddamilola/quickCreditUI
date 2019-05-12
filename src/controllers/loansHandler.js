@@ -3,9 +3,6 @@ import Loan from '../models/loans/Loan';
 import loans from '../models/loans/loansDb';
 import users from '../models/usersDb';
 import validate from '../utils/validate';
-// import validate from '../utils/validate';
-// import Util from '../utils/utills';
-// import Authenticate from '../middleware/auth';
 
 
 class LoansHandler {
@@ -37,7 +34,7 @@ class LoansHandler {
 
   //  apply for loan POST /loans
   static applyForLoan(req, res) {
-    const { email, tenor, amount } = req.body;
+    const { tenor, amount } = req.body;
     // validate body
     const result = validate.validateLoanApp(req.body);
     if (result.error) {
@@ -46,6 +43,10 @@ class LoansHandler {
         error: result.error,
       });
     }
+    // TODO get email from payload instead of requesting email
+    const decoded = res.locals.payload;
+    const { email } = decoded.payload;
+
     const user = users.find(exists => exists.email === email);
     // if non existent user
     if (!user) {
@@ -54,9 +55,10 @@ class LoansHandler {
         error: 'no user with that email',
       });
     }
+
     // user should only apply one loan at a time
     const loan = loans.find(existingloan => existingloan.email === email);
-    if (!loan) {
+    if (loan) {
       return res.json({
         status: 409,
         error: 'you have an existing loan application',

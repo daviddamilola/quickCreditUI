@@ -44,17 +44,13 @@ class Validator {
 
   static validateLoanApp(reqbody) {
     if (
-      reqbody.email === undefined
-      || reqbody.tenor === undefined
+      reqbody.tenor === undefined
       || reqbody.amount === undefined
     ) {
       return { error: 'fields cannot be empty' };
     }
 
     const msgArray = [];
-    if (!validator.isEmail(reqbody.email)) {
-      msgArray.push('valid email is required');
-    }
     if (!validator.isNumeric(reqbody.tenor)) {
       msgArray.push('tenor should be a number and should not be more than 12');
     }

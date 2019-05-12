@@ -4,10 +4,13 @@
   "description": "Quick Credit is an online lending platform that provides short term soft loans to individuals.",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon --exec babel-node src/server.js",
+    "start": "cross-env NODE_ENV=development nodemon --exec babel-node src/server.js",
+    "dev": "cross-env NODE_ENV=development nodemon --exec babel-node src/server.js",
     "build": "babel src --out-dir dist",
     "serve": "node dist/server.js",
-    "test": "mocha nyc -r @babel/register ./src/tests/test"
+    "test": "cross-env NODE_ENV=development nyc mocha -r @babel/register ./src/tests/test",
+    "test:repl": "cross-env NODE_ENV=development mocha debug -r @babel/register ./src/tests/test",
+    "test:debug": "cross-env NODE_ENV=development mocha --inspect --debug-brk"
   },
   "repository": {
     "type": "git",
@@ -31,23 +34,28 @@
     "@babel/core": "^7.4.4",
     "@babel/node": "^7.2.2",
     "@babel/preset-env": "^7.4.4",
-    "chai": "^4.2.0",
-    "chai-http": "^4.3.0",
+    "babel-plugin-istanbul": "^5.1.4",
+    "cross-env": "^5.2.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.17.2",
     "mocha": "^6.1.4",
-    "morgan": "^1.9.1",
     "nodemon": "^1.19.0",
     "nyc": "^14.1.0"
   },
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
     "debug": "^4.1.1",
+    "dotenv": "^8.0.0",
     "express": "^4.16.4",
     "express-sessions": "^1.0.6",
-    "http-errors": "^1.7.2",
+    "jsonwebtoken": "^8.5.1",
     "node": "^12.1.0",
     "supertest": "^4.0.2",
+    "uuid": "^3.3.2",
+    "validator": "^10.11.0",
     "volleyball": "^1.5.1"
   }
 }

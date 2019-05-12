@@ -12,12 +12,15 @@ class Loan {
     this.repaid = false;
     this.tenor = parseInt(tenor, 10);
     this.amount = parseFloat(amount);
-    this.balance = parseFloat(this.amount);
     this.interest = parseFloat(0.05 * (this.amount));
   }
 
   get paymentInstallment() {
     return (this.amount + this.interest) / this.tenor;
+  }
+
+  get balance() {
+    return this.amount + this.interest;
   }
 }
 

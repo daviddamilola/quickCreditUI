@@ -41,6 +41,34 @@ class Validator {
       message: 'success',
     };
   }
+
+  static validateLoanApp(reqbody) {
+    if (
+      reqbody.email === undefined
+      || reqbody.tenor === undefined
+      || reqbody.amount === undefined
+    ) {
+      return { error: 'fields cannot be empty' };
+    }
+
+    const msgArray = [];
+    if (!validator.isEmail(reqbody.email)) {
+      msgArray.push('valid email is required');
+    }
+    if (!validator.isNumeric(reqbody.tenor)) {
+      msgArray.push('tenor should be a number and should not be more than 12');
+    }
+    if ((reqbody.tenor > 12)) {
+      msgArray.push('tenor should not be more than 12');
+    }
+    if (!validator.isNumeric(reqbody.amount)) {
+      msgArray.push('amount should be an integer!');
+    }
+    if (msgArray.length > 0) {
+      return { error: msgArray };
+    }
+    return { message: 'success' };
+  }
 }
 
 export default Validator;

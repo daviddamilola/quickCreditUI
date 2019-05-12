@@ -1,11 +1,22 @@
 import chai from 'chai';
 import supertest from 'supertest';
 import uuid from 'uuid/v4';
+import usersJson from '../models/users.json';
 import server from '../server';
 import auth from '../middleware/auth';
 import utils from '../utils/utills';
 
+const users = Array.from(usersJson);
+
 const { expect } = chai;
+describe('User', () => {
+  beforeEach((done) => {
+    // empty database
+    users.splice(0, users.length);
+    // call done()
+    done();
+  });
+});
 
 describe('signup route', () => {
   it('GET /api/v1/auth/signup should return the user sign up form', (done) => {
@@ -100,6 +111,8 @@ describe('utilities', () => {
     done();
   });
 });
+
+/* authentication tests */
 describe('authentication', () => {
   const id = uuid();
   const password = 'randompas1623732834';
@@ -123,6 +136,37 @@ describe('authentication', () => {
         const { body } = res;
         expect(body.status).to.be.equal(201);
         expect(body.data).to.haveOwnProperty('token');
+        done();
+      });
+  });
+});
+
+/* sign in route */
+
+describe('signin route', () => {
+  it('should return the sign in page form ', (done) => {
+    supertest(server)
+      .get('/api/v1/auth/signin')
+      .end((err, res) => {
+        expect(res.body).to.be.an.instanceOf(Object);
+        expect(res.body).to.haveOwnProperty('status');
+        expect(res.body).to.haveOwnProperty('data');
+        expect(res.body.status).to.be.equals(200);
+        done();
+      });
+  });
+  it('should login user with details', (done) => {
+    supertest(server)
+      .post('/api/v1/auth/signin')
+      .send({
+        email: 'works@gmail.com',
+        password: 'dummypass345',
+      })
+      .end((err, res) => {
+        expect(res.body).to.be.an.instanceOf(Object);
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body).to.haveOwnProperty('status');
+        expect(res.body).to.haveOwnProperty('data');
         done();
       });
   });

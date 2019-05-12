@@ -2,7 +2,7 @@ import validator from 'validator';
 
 class Validator {
   static validateSignup(reqbody) {
-    if (reqbody === 'undefined') { return { error: 'fields cannot be empty' }; }
+    if (reqbody === undefined) { return { error: 'fields cannot be empty' }; }
     const msgArray = [];
     if (!validator.isEmail(reqbody.email)) {
       msgArray.push('valid email is required');
@@ -23,6 +23,23 @@ class Validator {
       return { error: msgArray };
     }
     return { message: 'success' };
+  }
+
+  static validateSignin(reqbody) {
+    if (reqbody.email === undefined || reqbody.password === undefined) return { error: 'fields cannot be empty' };
+    const msgArray = [];
+    if (!validator.isEmail(reqbody.email)) {
+      msgArray.push('valid email is required');
+    }
+    if (!validator.matches(reqbody.password, new RegExp('^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})'))) {
+      msgArray.push('passwords must contain six characters or more and has least one lowercase and one numeric character or has at least one uppercase and one numeric character');
+    }
+    if (msgArray.length > 0) {
+      return { error: msgArray };
+    }
+    return {
+      message: 'success',
+    };
   }
 }
 

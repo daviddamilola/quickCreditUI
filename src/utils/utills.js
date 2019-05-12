@@ -9,9 +9,9 @@ const util = {
   comparePassword(password, hash) {
     return bycrypt.compareSync(password, hash);
   },
-  genid(truthy) {
+  genid(db) {
     let id = 0;
-    if (truthy) {
+    if (db.length) {
       id += 1;
     }
     return id;

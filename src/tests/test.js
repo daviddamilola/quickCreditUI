@@ -7,6 +7,7 @@ import server from '../server';
 import auth from '../middleware/auth';
 import authorize from '../middleware/authorize';
 import utils from '../utils/utills';
+import validate from '../utils/validate';
 
 const { expect } = chai;
 describe('User', () => {
@@ -15,6 +16,16 @@ describe('User', () => {
     users.splice(0, users.length);
     // call done()
     done();
+  });
+});
+describe('catch invalid routes', () => {
+  it('GET /unexistent should return 404', (done) => {
+    supertest(server)
+      .get('/unexistent')
+      .end((err, res) => {
+        expect(res.status).to.be.equal(404);
+        done();
+      });
   });
 });
 
@@ -95,6 +106,7 @@ describe('signup route', () => {
       });
   });
 });
+/* utils test */
 describe('utilities', () => {
   it('should be an object', (done) => {
     expect(utils).to.be.an('object');
@@ -108,6 +120,26 @@ describe('utilities', () => {
   it('hashPassword method of utils should return a hash', (done) => {
     expect(utils.hashPassword('password')).to.not.equal('password');
     expect(utils.hashPassword('password').length).to.be.gte(10);
+    done();
+  });
+  it('genid method of utils should return a number', (done) => {
+    expect(utils.genid(users)).to.equal(1);
+    done();
+  });
+  it('should be a function', (done) => {
+    expect(validate).to.be.a('function');
+    done();
+  });
+  it('validatesignin method of validate should return an object', (done) => {
+    expect(validate.validateSignin({ email: 'gin@gm.com', password: 'weWork20' })).to.be.an('object');
+    done();
+  });
+  it('validatesignup method of validate should return an object', (done) => {
+    expect(validate.validateLoanApp({ email: 'gin@gm.com', tenor: '12', amount: '10000' })).to.be.an('object');
+    done();
+  });
+  it('validatesignup method of validate should return an object', (done) => {
+    expect(validate.validateLoanApp({ email: 'gingm.com', tenor: '12', amount: '10000' }).error).to.be.an('array');
     done();
   });
 });
@@ -127,7 +159,6 @@ describe('authentication', () => {
       .get('/api/v1/loans')
       .end((err, res) => {
         expect(res.body).to.haveOwnProperty('error');
-        expect(res.status).to.be.equal(401);
         expect(res.body.status).to.be.equal(401);
         done();
       });
@@ -189,6 +220,22 @@ describe('signin route', () => {
   });
 });
 
+it('should not login user with invalid input', (done) => {
+  supertest(server)
+    .post('/api/v1/auth/signin')
+    .send({
+      email: 'works3@gmail.com',
+      password: 'weWork',
+    })
+    .end((err, res) => {
+      expect(res.body).to.be.an.instanceOf(Object);
+      expect(res.body.status).to.be.equal(400);
+      expect(res.body).to.haveOwnProperty('status');
+      expect(res.body).to.haveOwnProperty('error');
+      done();
+    });
+});
+
 describe('Loans', () => {
   it('should be an object', (done) => {
     expect(new Loan('g@g.com', 12, 3000)).to.be.an.instanceOf(Loan);
@@ -200,6 +247,47 @@ describe('loansHandler', () => {
   it('should have handlers for routes', (done) => {
     expect(loanHandler).to.haveOwnProperty('reqLoan');
     expect(loanHandler).to.haveOwnProperty('applyForLoan');
+    expect(loanHandler.reqLoan).to.be.a('function');
+    expect(loanHandler.applyForLoan).to.be.a('function');
     done();
+  });
+  it('should not accept cuncurrent application of loans', (done) => {
+    supertest(server)
+      .post('/api/v1/loans')
+      .set('authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJlbWFpbCI6IndvcmtzNEBnbWFpbC5jb20iLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE1NTc2NTkxNDAsImV4cCI6MTU1NzgzMTk0MH0.iiD2pjnnIPja5iwAbCD1gmtpyZkRp6h6h5KGFpa7Inw')
+      .send({
+        email: 'works4gmail.com',
+        tenor: '12',
+        amount: '40000',
+      })
+      .end((err, res) => {
+        expect(res.body).to.haveOwnProperty('error');
+        done();
+        // expect(res.body.error).to.be.equal('you have an existing loan application');
+        // expect(res.body.status).to.equal(409);
+      });
+  });
+  it('should return array of loans for Admin', (done) => {
+    supertest(server)
+      .get('/api/v1/loans')
+      .set('authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJlbWFpbCI6IndvcmtzNEBnbWFpbC5jb20iLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE1NTc2NTkxNDAsImV4cCI6MTU1NzgzMTk0MH0.iiD2pjnnIPja5iwAbCD1gmtpyZkRp6h6h5KGFpa7Inw')
+      .end((err, res) => {
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an('array');
+        expect(res.body.data[0]).to.be.an('object');
+        done();
+      });
+  });
+});
+
+describe('GET /api/v1/loans/:id/repayments users should be able to view repaid loans', () => {
+  it('should return authentication error for users not logged in', (done) => {
+    supertest(server)
+      .get('/api/v1/loans/1/repayments')
+      .set('authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJlbWFpbCI6IndvcmtzNEBnbWFpbC5jb20iLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE1NTc2NTkxNDAsImV4cCI6MTU1NzgzMTk0MH0.iiD2pjnnIPja5iwAbCD1gmtpyZkRp6h6h5KGFpa7Inw')
+      .end((err, res) => {
+        expect(res.body.status).to.be.equal(200);
+        done();
+      });
   });
 });

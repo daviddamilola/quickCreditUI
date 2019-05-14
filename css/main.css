@@ -123,6 +123,9 @@ p{
 .pb-2{
     padding-bottom: 2rem;
 }
+.pl-1{
+    padding-left: 0.5rem;
+}
 .padding{
     padding: 2rem 0;
 }
@@ -140,8 +143,6 @@ p{
 
 .btn:active{
     border: none;
-    background-color: #F2C744;
-    box-shadow: 0 3px 10px rgb(238, 243, 133);
     transform: translateY(4px);
 }
  .btn-outline{
@@ -296,7 +297,7 @@ border-bottom-width: 70%;
     background: #ccc;
 }
 .requestCallBack{
-    background: #F2C744 url("../img/happy.jpg");
+    background: rgb(206, 164, 37) url("../img/happy.jpg");
     background-attachment: fixed;
     background-size: cover;
     background-position: center;
@@ -331,19 +332,20 @@ border-bottom-width: 70%;
 .yoursFaithfully{
     font-weight: bold;
 }
+
 .r-txt-align{
     text-align: right;
+}
+.mission h1{
+    height: 3rem;
+}
+.mission-holder{
+    margin: 0;
 }
 footer{
     background: #3d3d3d;
     color: #F2C744;
-}
-.address ul{
-    padding: 0;
-    margin: 0;
-}
-footer li{
-    list-style: none;
+    font-size: 0.7rem;
 }
 @media only screen and (max-width: 768px) {
     /* For mobile phones: */
@@ -351,7 +353,7 @@ footer li{
       width: 100%;
     }
 
-    .stats,.nav{
+    .access,.nav{
         display: none;
     }
 
@@ -363,6 +365,11 @@ footer li{
     }
     .mainDashboard_s_header{
         display: block;
+    }
+    .requestCallBackForm > form{
+        padding: 0;
+        margin: 0;
+        width: 100%;
     }
     .col-s-1 {width: 8.33%;}
     .col-s-2 {width: 16.66%;}

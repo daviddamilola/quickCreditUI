@@ -2,8 +2,6 @@
 import Loan from '../models/loans/Loan';
 import loans from '../models/loans/loansDb';
 import users from '../models/usersDb';
-import validate from '../utils/validate';
-
 
 class LoansHandler {
   // req loan page

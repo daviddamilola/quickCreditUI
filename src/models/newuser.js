@@ -8,9 +8,14 @@ class NewUser {
     this.lastname = lastname;
     this.password = hashPassword;
     this.address = address;
-    this.status = 'pending';
     this.isAdmin = false;
     this.dateCreated = new Date();
+  }
+  get status() {
+    return 'pending';
+  }
+  set status(status) {
+    this.status = status;
   }
 }
 

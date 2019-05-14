@@ -108,5 +108,28 @@ class UserHandler {
       },
     });
   }
+
+  static verifyUser(req, res) {
+    const targetUser = users.find(user => user.email == req.params.email);
+    console.log(targetUser);
+    if (targetUser === undefined) {
+      return res.json({
+        status: 404,
+        error: 'no user with that email'
+      })
+    }
+    targetUser.status = 'verified';
+    return res.json({
+      status: 201,
+      data: {
+        email: targetUser.email,
+        firstname: targetUser.firstName,
+        lastName: targetUser.lastName,
+        address: targetUser.address,
+        password: targetUser.password,
+        status: targetUser.status
+      }
+    });
+  }
 }
 export default UserHandler;

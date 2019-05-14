@@ -17,11 +17,11 @@ class LoansHandler {
     const decoded = res.locals.payload;
     const targetUser = users.find(user => user.email === decoded.payload.email);
     if (req.query) {
-      LoansHandler.repaidLoans(targetUser, res);
+      return LoansHandler.repaidLoans(targetUser, res);
     }
 
     // depending on the value of isAdmin it'll either return all loan application or the apply page
-    if (targetUser.isAdmin === true) {
+    if (targetUser.isAdmin === true && req.method === 'GET') {
       // TODO
       return res.json({
         status: 200,

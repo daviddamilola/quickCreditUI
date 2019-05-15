@@ -112,21 +112,20 @@
             <hr class="col-s-12">
             <div id="canvas">
                 <div class="col-12">
-                    <div class="card">
-                        <div class="row row__spread card">
-                            <div class="col-4 card"></div>
-                            <div class="col-4 card"></div>
-                            <div class="col-4 card"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row row__spread mt-4">
-                    <div class="col-6">
-
-                    </div>
-                    <div class="col-6">
-                        <div class="card">
-
+                    <div>
+                        <div class="row row__spread padding">
+                            <div class="col-3 card col col__Center mb-2">
+                                <h1>5</h1>
+                                <p>Pending Users</p>
+                            </div>
+                            <div class="col-3 card col col__Center mb-2">
+                                <h1>4</h1>
+                                <p>Loan Applications</p>
+                            </div>
+                            <div class="col-3 card col col__Center mb-2">
+                                <h1>1</h1>
+                                <p>Repayments</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -167,13 +166,17 @@
 
         verify_s.addEventListener('click', (e) => {
             e.preventDefault();
-            fetch(verifyUrl).then(
-                (response) => {
-                    return response.text()
-                }
-            ).then((data) => {
-                canvas.innerHTML = data;
-            })
+            try {
+                fetch(verifyUrl).then(
+                    (response) => {
+                        return response.text()
+                    }
+                ).then((data) => {
+                    canvas.innerHTML = data;
+                })
+            } catch (err) {
+                canvas.innerHTML = err.message;
+            }
         }, false)
         currentLoan.addEventListener('click', (e) => {
             e.preventDefault();

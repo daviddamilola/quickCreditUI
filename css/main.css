@@ -172,9 +172,9 @@ p{
     display: none;
     background: none;
     border: none;
+    outline: none;
 }
 .navBtn:active{
-    box-shadow: 0 3px 10px rgb(238, 243, 133);
     transform: translateY(4px);
 }
 

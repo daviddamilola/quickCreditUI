@@ -1,8 +1,9 @@
-import uuid from 'uuid/v4';
-
+import genId from '../utils/utills';
+import users from '../models/usersDb';
+const { genid } = genId;
 class NewUser {
   constructor(email, firstname, lastname, hashPassword, address) {
-    this.id = uuid();
+    this.id = genid(users);
     this.email = email;
     this.firstname = firstname;
     this.lastname = lastname;

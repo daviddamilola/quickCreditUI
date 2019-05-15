@@ -1,38 +1,26 @@
 import users from '../models/usersDb';
-import validate from '../utils/validate';
-
 import Util from '../utils/utills';
 import NewUser from '../models/newuser';
 import Authenticate from '../middleware/auth';
 
-class UserHandler {
+class userController {
   static reqSignup(req, res) {
-    res.status(200);
-    res.json({
-      status: 200,
-      data: {
-        message: 'welcome to quick credit',
-      },
+    const data = {
+      message: 'welcome to the sign up page',
+    };
+    return userController.response(res, 200, data);
+  }
+
+  static response(res, status, data) {
+    return res.json({
+      status,
+      data,
     });
   }
 
-  static createUser(req, res) {
-    const { body } = req;
-    const result = validate.validateSignup(body);
-    if (result.error) {
-      return res.status(406).json({
-        status: 406,
-        error: result.error,
-      });
-    }
-
-    const hashpassword = Util.hashPassword(body.password);
-    const {
-      email, firstName, lastName, address,
-    } = body;
-    const userToBeCreated = new NewUser(email, firstName, lastName, hashpassword, address);
+  static checkExistingUser(res, email) {
     const user = users.find(
-      existing => existing.email === body.email,
+      existing => existing.email === email,
     );
     if (user) {
       return res.status(409).json({
@@ -40,96 +28,102 @@ class UserHandler {
         error: 'existent user',
       });
     }
-    users.push(userToBeCreated);
+    return false;
+  }
+
+  static createUser(req, res) {
+    const {
+      body: {
+        password, email, firstName, lastName, address,
+      },
+    } = req;
+    const hashpassword = Util.hashPassword(password);
+    const userToBeCreated = new NewUser(email, firstName, lastName, hashpassword, address);
+    if (!userController.checkExistingUser(res, email)) { users.push(userToBeCreated); }
     const token = Authenticate.makeToken(
       userToBeCreated.id, userToBeCreated.email, userToBeCreated.isAdmin,
     );
-    return res.status(201).json({
-      status: 201,
-      data: {
-        token,
-        id: userToBeCreated.id,
-        firstName: userToBeCreated.firstname,
-        lastName: userToBeCreated.lastname,
-        email: userToBeCreated.email,
-        createdOn: userToBeCreated.dateCreated,
-      },
-    });
+    const data = {
+      token,
+      id: userToBeCreated.id,
+      firstName: userToBeCreated.firstname,
+      lastName: userToBeCreated.lastname,
+      email: userToBeCreated.email,
+      createdOn: userToBeCreated.dateCreated,
+    };
+    return userController.response(res, 201, data);
   }
 
   static reqSignin(req, res) {
-    res.status(200);
-    return res.json({
-      status: 200,
-      data: {
-        message: 'welcome to the sign in page',
-      },
-    });
+    const data = {
+      message: 'welcome to the sign in page',
+    };
+    return userController.response(res, 200, data);
   }
 
-  static login(req, res) {
-    // get the user details
-    const validationResult = validate.validateSignin(req.body);
-    if (validationResult.error) {
-      return res.status(400)
-        .json({
-          status: 400,
-          data: {
-            message: validationResult.error,
-          },
-        });
-    }
-    // verify that the user matches registered details
+  static verifyUserDetails(req, res) {
     const { email, password } = req.body;
-    // TODO hash password and compare with hash in db
-
     const user = users.find(
       existing => existing.email === email,
     );
-    const userPass = Util.comparePassword(password, user.password);
-
-    if (!(user && userPass)) {
-      return res.status(404).json({
+    console.log(user);
+    if (!(user)) {
+      const error = {
         status: 400,
         error: 'user does not exist',
+      };
+      return error;
+    }
+    const userPass = Util.comparePassword(password, user.password);
+    if (!(userPass)) {
+      return res.status(404).json({
+        status: 400,
+        error: 'wrong password',
       });
     }
-    // give the user a token
+
+    return user;
+  }
+
+  static login(req, res) {
+    const user = userController.verifyUserDetails(req, res);
+    if (user.error) {
+      return res.json({
+        status: 404,
+        error: user.error,
+      });
+    }
     const token = Authenticate.makeToken(user.id, user.email, user.isAdmin);
-    // return json to client
-    return res.json({
-      status: 200,
-      data: {
-        token,
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-      },
-    });
+    const data = {
+      token,
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+    };
+    return userController.response(res, 200, data);
   }
 
   static verifyUser(req, res) {
-    const targetUser = users.find(user => user.email == req.params.email);
+    const targetUser = users.find(user => user.email === req.params.email);
     console.log(targetUser);
     if (targetUser === undefined) {
       return res.json({
         status: 404,
-        error: 'no user with that email'
-      })
+        error: 'no user with that email',
+      });
     }
     targetUser.status = 'verified';
-    return res.json({
-      status: 201,
-      data: {
-        email: targetUser.email,
-        firstname: targetUser.firstName,
-        lastName: targetUser.lastName,
-        address: targetUser.address,
-        password: targetUser.password,
-        status: targetUser.status
-      }
-    });
+    const data = {
+      email: targetUser.email,
+      firstname: targetUser.firstName,
+      lastName: targetUser.lastName,
+      address: targetUser.address,
+      password: targetUser.password,
+      status: targetUser.status,
+    };
+    return userController.response(res, 201, data);
   }
 }
-export default UserHandler;
+
+export default userController;

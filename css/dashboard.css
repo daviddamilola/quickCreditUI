@@ -20,7 +20,7 @@ color: #f2c744;
     min-height: 100vh;
     background-blend-mode: multiply;
     box-sizing: border-box;
-    box-shadow: 3px 3px 20px #333;
+    box-shadow: 2px 2px 20px rgb(197, 190, 190);
 }
 .sideNav ul{
     padding: 0;
@@ -111,7 +111,7 @@ label{
     color: red;
 }
 .card{
-    box-shadow: 3px 3px 10px rgb(149, 147, 147);
+    box-shadow: 2px 2px 20px rgb(202, 198, 198);
     min-height: 10rem;
     border-radius: 3px;
 }
@@ -127,11 +127,9 @@ label{
     border-radius: 3px;
     min-height: 50px;
     text-align: center;
-    background-image: linear-gradient(to right top, #f2c744, #f1b735, #efa627, #ed951b, #eb8312);
+    background-color: #F2C744;
 }
-.cardBadge p{
-    
-}
+
 .card table{
     border-collapse: collapse;
     padding: 0.5rem 0.6rem;
@@ -155,13 +153,13 @@ tr:nth-child(odd){
 }
 .tdBtn{
     text-align: center;
-    padding: 0.3rem 0.3rem;
+    padding: 0.4rem 0.4rem;
     border: none;
     outline: none;
     border-radius: 3px;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    background-image: linear-gradient(to right top, #f2c744, #f1b735, #efa627, #ed951b, #eb8312);
+    background-color:#F2C744;
 }
 .reject{
     text-align: center;
@@ -184,6 +182,22 @@ tr:nth-child(odd){
     padding-top: 0.5rem;
 }
 @media only screen and (max-width: 768px) {
+    table, thead, tbody, th, td, tr {
+        overflow-x: visible;
+    }
+    /* hide table headers */
+    /* td::before {
+        position: absolute;
+        top: 0;
+		left: 6px;
+		width: 45%;
+		padding-right: 10px;
+		white-space: nowrap;
+    } */
+   
+    .cardBadge {
+        font-size: 0.rem;
+    }
    .mainDashboard__header{
        display:none;
    }

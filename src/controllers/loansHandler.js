@@ -1,52 +1,79 @@
-// import jwt from 'jsonwebtoken';
 import Loan from '../models/loans/Loan';
 import loans from '../models/loans/loansDb';
 import users from '../models/usersDb';
-import validate from '../utils/validate';
-
 
 class LoansHandler {
-  // req loan page
-  static reqLoan(req, res) {
+  /**
+ * checks for payload presence if no paylooad auth has failed.
+ *
+ * @param {res} the response object, pay load is in res.locals.payload
+ * @return {true} .
+ */
+  static checkPayload(res) {
     if (!res.locals.payload) {
-      res.json({
+      return res.json({
         status: 401,
         error: 'authentication failed, login again to get access',
       });
     }
-    const decoded = res.locals.payload;
-    const targetUser = users.find(user => user.email === decoded.payload.email);
-    if (req.query) {
-      return LoansHandler.repaidLoans(targetUser, res);
-    }
-
-    // depending on the value of isAdmin it'll either return all loan application or the apply page
-    if (targetUser.isAdmin === true && req.method === 'GET') {
-      // TODO
-      return res.json({
-        status: 200,
-        data: loans,
-      });
-    }
-    return res.json({
-      status: 200,
-      data: {
-        message: 'welcome to the apply loan page',
-      },
-    });
+    return true;
   }
 
-  //  apply for loan POST /loans
+  /**
+ * Creates a 200 response with the desired data.
+ *
+ * @param {res, info} the response object, the data to be returned
+ * @return {res.json({status:200, data: info})} The response to the client.
+ */
+  static returnData(res, info) {
+    return res.json({
+      status: 200,
+      data: info,
+    });
+  }
+  /**
+ * handles get request for the loan resource.
+ *
+ * @param {number} d The desired diameter of the circle.
+ * @return {Circle} The new Circle object.
+ */
+
+  static reqLoan(req, res) {
+    LoansHandler.checkPayload(res);
+    const decoded = res.locals.payload;
+    const targetUser = users.find(user => user.email === decoded.payload.email);
+    if (req.query.repaid === 'true' && req.query.status === 'verified') {
+      return LoansHandler.repaidLoans(targetUser, res);
+    }
+    if (req.query.repaid === 'false' && req.query.status === 'verified') {
+      return LoansHandler.partiallyPaid(targetUser, res);
+    }
+    if (targetUser.isAdmin === true && req.method === 'GET') {
+      LoansHandler.returnData(res, loans);
+    }
+    return LoansHandler.returnData(res, { message: 'welcome to the apply page' });
+  }
+
+  /**
+ * validates the request Body.
+ *
+ * @param {req, res} the request object, the response object.
+ * @return {true} inputs are correct.
+ */
+  // static validateBody(req, res) {
+  //   const result = validate.validateLoanApp(req.body);
+  //   if (result.error) {
+  //     return res.status(406).json({
+  //       status: 406,
+  //       error: result.error,
+  //     });
+  //   }
+  //   return true;
+  // }
+
   static applyForLoan(req, res) {
     const { tenor, amount } = req.body;
-    // validate body
-    const result = validate.validateLoanApp(req.body);
-    if (result.error) {
-      return res.status(406).json({
-        status: 406,
-        error: result.error,
-      });
-    }
+    LoansHandler.validateBody(req, res);
     // TODO get email from payload instead of requesting email
     const decoded = res.locals.payload;
     const { email } = decoded.payload;
@@ -55,13 +82,13 @@ class LoansHandler {
     // if non existent user
     if (!user) {
       return res.json({
-        status: 401,
+        status: 404,
         error: 'no user with that email',
       });
     }
 
     // user should only apply one loan at a time
-    const loan = loans.find(existingloan => existingloan.email === email);
+    const loan = loans.find(existingloan => existingloan.email === email && existingloan.repaid === false);
     if (loan) {
       return res.json({
         status: 409,
@@ -89,21 +116,56 @@ class LoansHandler {
       },
     });
   }
+  /**
+ * Checks if a user is admin.
+ *
+ * @param {targetUser, res} the user to check, the response object.
+ * @return {true} returns true if the user is admin, and an error response otherwise.
+ */
 
-  static repaidLoans(targetUser, res) {
+  static checkIfAdmin(targetUser, res) {
     if (targetUser.isAdmin === false) {
-      res.json({
+      return res.json({
         status: 401,
         error: 'you are unauthorized to access this resource',
       });
     }
+    return true;
+  }
+
+  /**
+ * get repaid loans.
+ *
+ * @param {targetUser, res} the user to check, the response object.
+ * @return {clientResponse} returns the client response.
+ */
+  static repaidLoans(targetUser, res) {
+    LoansHandler.checkIfAdmin(targetUser);
     const repaid = loans.filter(
       loan => loan.status === 'verified' && loan.repaid === true,
     );
-    return res.json({
-      status: 200,
-      data: repaid,
-    });
+    const clientResponse = LoansHandler.returnData(res, repaid);
+    return clientResponse;
+  }
+
+  /**
+ * get repaid loans.
+ *
+ * @param {targetUser, res} the user to check, the response object.
+ * @return {clientResponse} returns the client response.
+ */
+  static partiallyPaid(targetUser, res) {
+    LoansHandler.checkIfAdmin(targetUser);
+    const partiallyPaid = loans.filter(
+      loan => loan.status === 'verified' && loan.repaid === false,
+    );
+    if (!partiallyPaid) {
+      return res.json({
+        status: 404,
+        error: 'no user has partially paid',
+      });
+    }
+    return LoansHandler.returnData(res, partiallyPaid);
   }
 }
 

@@ -89,20 +89,20 @@ describe('signup route', () => {
         done();
       });
   });
-  it('should throw an error if request fields are empty', (done()) => {
+  it('should throw an error if request fields are empty', (done) => {
     supertest(server)
       .post('/api/v1/auth/signup')
       .send({
-      email: undefined,
-      firstName: undefined,
-      lastName: undefined,
-      password: undefined,
-      address: undefined,
-    })
+        email: undefined,
+        firstName: undefined,
+        lastName: undefined,
+        password: undefined,
+        address: undefined,
+      })
       .end((req, res) => {
-      const { body } = res;
-      expect(body.status).to.be.equal(400);
-      done();
-    });
-});
+        const { body } = res;
+        expect(body.status).to.be.equal(400);
+        done();
+      });
+  });
 });

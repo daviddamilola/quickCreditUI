@@ -125,5 +125,4 @@ class userController {
     return userController.response(res, 201, data);
   }
 }
-
 export default userController;

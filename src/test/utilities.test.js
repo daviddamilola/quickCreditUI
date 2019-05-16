@@ -5,9 +5,7 @@ import utils from '../utils/utills';
 const { expect } = chai;
 describe('User', () => {
   beforeEach((done) => {
-    // empty database
     users.splice(0, users.length);
-    // call done()
     done();
   });
 });

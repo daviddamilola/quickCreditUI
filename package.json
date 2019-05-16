@@ -8,7 +8,7 @@
     "dev": " nodemon --exec babel-node src/server.js",
     "build": "babel src --out-dir dist",
     "serve": "node dist/server.js",
-    "test": " nyc mocha -r  @babel/register --recursive ./src/test/*.test.js",
+    "test": " nyc mocha -r  @babel/register --recursive ./src/test/*.test.js --timeout 3000",
     "test:repl": " mocha debug -r @babel/register  ./src/tests",
     "test:debug": " mocha --inspect --debug-brk",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
@@ -60,7 +60,6 @@
     "node": "^12.1.0",
     "supertest": "^4.0.2",
     "uuid": "^3.3.2",
-    "validator": "^10.11.0",
     "volleyball": "^1.5.1"
   }
 }

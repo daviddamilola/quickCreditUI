@@ -2,8 +2,6 @@
 import Loan from '../models/loans/Loan';
 import loans from '../models/loans/loansDb';
 import users from '../models/usersDb';
-import validate from '../utils/validate';
-
 
 class LoansHandler {
   // req loan page
@@ -16,6 +14,10 @@ class LoansHandler {
     }
     const decoded = res.locals.payload;
     const targetUser = users.find(user => user.email === decoded.payload.email);
+    if (req.query) {
+      LoansHandler.repaidLoans(targetUser, res);
+    }
+
     // depending on the value of isAdmin it'll either return all loan application or the apply page
     if (targetUser.isAdmin === true) {
       // TODO
@@ -85,6 +87,23 @@ class LoansHandler {
       },
     });
   }
+
+  static repaidLoans(targetUser, res) {
+    if (targetUser.isAdmin === false) {
+      res.json({
+        status: 401,
+        error: 'you are unauthorized to access this resource',
+      });
+    }
+    const repaid = loans.filter(
+      loan => loan.status === 'verified' && loan.repaid === true,
+    );
+    return res.json({
+      status: 200,
+      data: repaid,
+    });
+  }
 }
+
 
 export default LoansHandler;

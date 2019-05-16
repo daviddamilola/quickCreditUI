@@ -5,6 +5,7 @@ import viewLoanHistory from '../../controllers/repayHandler';
 import authenticate from '../../middleware/authenticate';
 import LoansHandler from '../../controllers/loansHandler';
 import Authorizer from '../../middleware/authorize';
+import validator from '../../middleware/validate';
 
 const { authorize } = Authorizer;
 const app = express.Router();
@@ -12,9 +13,9 @@ const app = express.Router();
 // Auth route.
 app.get('/auth/signup', AuthHandler.reqSignup);
 
-app.post('/auth/signup', AuthHandler.createUser);
+app.post('/auth/signup', validator.validateSignup, AuthHandler.createUser);
 
-app.get('/auth/signin', AuthHandler.reqSignin);
+app.get('/auth/signin', validator.validateSignin, AuthHandler.reqSignin);
 
 app.post('/auth/signin', AuthHandler.login);
 

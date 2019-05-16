@@ -1,4 +1,3 @@
-import validator from 'validator';
 
 class Validator {
   static validateSignup(req, res, next) {
@@ -50,29 +49,20 @@ class Validator {
     return next();
   }
 
-  static validateLoanApp(reqbody) {
-    if (
-      reqbody.tenor === undefined
-      || reqbody.amount === undefined
-    ) {
-      return { error: 'fields cannot be empty' };
+  static validateLoanApp(req, res, next) {
+    req.checkBody('tenor', 'enter a number in the range 1-12').not().isEmpty().isNumeric()
+      .isLength({ min: 1 })
+      .isLength({ max: 12 });
+    req.checkBody('email', 'enter a valid email').not().isEmpty().isEmail();
+    req.checkBody('amount', 'enter a valid amount less than 100,000 ').not.isEmpty().isNumeric()
+      .isLength({ min: 1 })
+      .isLength({ max: 100000 });
+    const errors = req.ValidationErrors;
+    if (errors) {
+      res.json({ status: 400, message: errors.map(err => err.msg) });
     }
-
-    const msgArray = [];
-    if (!validator.isNumeric(reqbody.tenor)) {
-      msgArray.push('tenor should be a number and should not be more than 12');
-    }
-    if ((reqbody.tenor > 12)) {
-      msgArray.push('tenor should not be more than 12');
-    }
-    if (!validator.isNumeric(reqbody.amount)) {
-      msgArray.push('amount should be an integer!');
-    }
-    if (msgArray.length > 0) {
-      return { error: msgArray };
-    }
-    return { message: 'success' };
+    console.log(req.body.email);
+    return next();
   }
 }
-
 export default Validator;

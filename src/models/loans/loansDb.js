@@ -8,7 +8,8 @@ const loans = [
     tenor: 3,
     amount: 10000.00,
     paymentInstallment: 3500.00,
-    balance: 10000.00,
+    balance: 7000,
+    balanceInit: 10500.00,
     interest: 500.00,
   },
   {
@@ -20,7 +21,8 @@ const loans = [
     tenor: 3,
     amount: 10000.00,
     paymentInstallment: 3500.00,
-    balance: 10000.00,
+    balance: 10500.00,
+    balanceInit: 10500.00,
     interest: 500.00,
   },
   {
@@ -32,7 +34,8 @@ const loans = [
     tenor: 3,
     amount: 10000.00,
     paymentInstallment: 3500.00,
-    balance: 10000.00,
+    balance: 10500.00,
+    balanceInit: 10500.00,
     interest: 500.00,
   },
 ];

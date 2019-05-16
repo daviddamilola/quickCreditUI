@@ -19,13 +19,11 @@ app.get('/auth/signin', validator.validateSignin, AuthHandler.reqSignin);
 
 app.post('/auth/signin', AuthHandler.login);
 
-// user apply loan
-// authenticate that user exist then render the apply loan page
 app.get('/loans', authorize, authenticate, LoansHandler.reqLoan);
-// user post loan application, authenticate user then post loan application to loan db
+
 app.post('/loans', authorize, authenticate, LoansHandler.applyForLoan);
-// user can view loan history
+
 app.get('/loans/:id/repayments', authorize, authenticate, viewLoanHistory.viewLoanHistory);
-// admin can verify user
-// app.patch('/api/v1/users/:email/verify', Authhandler.VerifyUser);
+
+app.patch('/loans/:email/verify', validator.validateLoanApp, authorize, authenticate, AuthHandler.verifyUser);
 export default app;

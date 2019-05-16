@@ -11,16 +11,12 @@ class userController {
     return userController.response(res, 200, data);
   }
 
-  // static PerformSignupValidation(body, res) {
-  //   const result = validate.validateSignup(body);
-  //   if (result.error) {
-  //     return res.status(406).json({
-  //       status: 406,
-  //       error: result.error,
-  //     });
-  //   }
-  //   return true;
-  // }
+  static response(res, status, data) {
+    return res.json({
+      status,
+      data,
+    });
+  }
 
   static checkExistingUser(res, email) {
     const user = users.find(
@@ -41,8 +37,6 @@ class userController {
         password, email, firstName, lastName, address,
       },
     } = req;
-
-    // userController.performSigninValidation(req, res);
     const hashpassword = Util.hashPassword(password);
     const userToBeCreated = new NewUser(email, firstName, lastName, hashpassword, address);
     if (!userController.checkExistingUser(res, email)) { users.push(userToBeCreated); }
@@ -67,19 +61,6 @@ class userController {
     return userController.response(res, 200, data);
   }
 
-  static performSigninValidation(req, res) {
-    const validationResult = validate.validateSignin(req);
-    console.log(req.body);
-    if (validationResult.error) {
-      const data = {
-        message: validationResult.error,
-      };
-      return userController.response(res, 406, data);
-    }
-    console.log(validationResult);
-    return true;
-  }
-
   static verifyUserDetails(req, res) {
     const { email, password } = req.body;
     const user = users.find(
@@ -97,18 +78,11 @@ class userController {
     if (!(userPass)) {
       return res.status(404).json({
         status: 400,
-        error: 'user does not exist',
+        error: 'wrong password',
       });
     }
 
     return user;
-  }
-
-  static response(res, status, data) {
-    return res.json({
-      status,
-      data,
-    });
   }
 
   static login(req, res) {
@@ -129,5 +103,30 @@ class userController {
     };
     return userController.response(res, 200, data);
   }
+
+  static verifyUser(req, res) {
+    const targetUser = users.find(user => user.email === req.params.email);
+    console.log(targetUser);
+    if (targetUser === undefined) {
+      return res.json({
+        status: 404,
+        error: 'no user with that email',
+      });
+    }
+    targetUser.status = 'verified';
+    const data = {
+      email: targetUser.email,
+      firstname: targetUser.firstName,
+      lastName: targetUser.lastName,
+      address: targetUser.address,
+      password: targetUser.password,
+      status: targetUser.status,
+    };
+    return userController.response(res, 201, data);
+  }
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 49fc9781f31816f8f0901295ed8da6bde7c875d9
 export default userController;

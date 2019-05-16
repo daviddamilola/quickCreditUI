@@ -125,4 +125,8 @@ class userController {
     return userController.response(res, 201, data);
   }
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 49fc9781f31816f8f0901295ed8da6bde7c875d9
 export default userController;

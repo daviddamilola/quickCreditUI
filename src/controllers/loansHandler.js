@@ -88,8 +88,12 @@ class LoansHandler {
     }
 
     // user should only apply one loan at a time
+<<<<<<< HEAD
     const loan = loans
       .find(existingloan => existingloan.email === email && existingloan.repaid === false);
+=======
+    const loan = loans.find(existingloan => existingloan.email === email && existingloan.repaid === false);
+>>>>>>> 49fc9781f31816f8f0901295ed8da6bde7c875d9
     if (loan) {
       return res.json({
         status: 409,

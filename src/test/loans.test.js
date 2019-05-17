@@ -2,7 +2,7 @@ import chai from 'chai';
 import supertest from 'supertest';
 import Loan from '../models/loans/Loan';
 import users from '../models/usersDb';
-import loanHandler from '../controllers/loansHandler';
+import loanHandler from '../controllers/loansController';
 import server from '../server';
 
 const { expect } = chai;

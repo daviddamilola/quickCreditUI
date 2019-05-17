@@ -4,12 +4,25 @@ import NewUser from '../models/newuser';
 import Authenticate from '../middleware/auth';
 
 class userController {
+  /**
+ * requests sign up page
+ *
+ * @param {req, res} req: the request object, res: the response objet
+ * @return {json object} .
+ */
   static reqSignup(req, res) {
     const data = {
       message: 'welcome to the sign up page',
     };
     return userController.response(res, 200, data);
   }
+
+  /**
+ * returns a response with the data passed in
+ *
+ * @param {res, status, data} res: the response object, status code, data to be returned
+ * @return {json object} .
+ */
 
   static response(res, status, data) {
     return res.json({
@@ -18,6 +31,12 @@ class userController {
     });
   }
 
+  /**
+ * checks for an existing user
+ *
+ * @param {res, email} res: the response object, email
+ * @return {false} .
+ */
   static checkExistingUser(res, email) {
     const user = users.find(
       existing => existing.email === email,
@@ -31,6 +50,12 @@ class userController {
     return false;
   }
 
+  /**
+ * creates a user
+ *
+ * @param {req, res} req: request object, res: response object
+ * @return {false} .
+ */
   static createUser(req, res) {
     const {
       body: {
@@ -54,6 +79,12 @@ class userController {
     return userController.response(res, 201, data);
   }
 
+  /**
+ * requests sign in page
+ *
+ * @param { req, res } req: the request object, res: the response object
+ * @return {json} .
+ */
   static reqSignin(req, res) {
     const data = {
       message: 'welcome to the sign in page',
@@ -61,12 +92,17 @@ class userController {
     return userController.response(res, 200, data);
   }
 
+  /**
+ * verifies user details
+ *
+ * @param { req, res } req: the request object, res: the response object
+ * @return {user} .
+ */
   static verifyUserDetails(req, res) {
     const { email, password } = req.body;
     const user = users.find(
       existing => existing.email === email,
     );
-    console.log(user);
     if (!(user)) {
       const error = {
         status: 400,
@@ -85,6 +121,12 @@ class userController {
     return user;
   }
 
+  /**
+ * login a user
+ *
+ * @param { req, res } req: the request object, res: the response object
+ * @return {json} .
+ */
   static login(req, res) {
     const user = userController.verifyUserDetails(req, res);
     if (user.error) {
@@ -104,9 +146,14 @@ class userController {
     return userController.response(res, 200, data);
   }
 
+  /**
+ * verifies a user
+ *
+ * @param { req, res } req: the request object, res: the response object
+ * @return {json} .
+ */
   static verifyUser(req, res) {
     const targetUser = users.find(user => user.email === req.params.email);
-    console.log(targetUser);
     if (targetUser === undefined) {
       return res.json({
         status: 404,
@@ -125,8 +172,4 @@ class userController {
     return userController.response(res, 201, data);
   }
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 49fc9781f31816f8f0901295ed8da6bde7c875d9
 export default userController;

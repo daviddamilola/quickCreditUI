@@ -1,9 +1,9 @@
 /* eslint linebreak-style: ["error", "windows"] */
 import express from 'express';
-import AuthHandler from '../../controllers/authHandler';
-import viewLoanHistory from '../../controllers/repayHandler';
+import AuthHandler from '../../controllers/userController';
+import viewLoanHistory from '../../controllers/repayController';
 import authenticate from '../../middleware/authenticate';
-import LoansHandler from '../../controllers/loansHandler';
+import LoansHandler from '../../controllers/loansController';
 import Authorizer from '../../middleware/authorize';
 import validator from '../../middleware/validate';
 
@@ -21,7 +21,7 @@ app.post('/auth/signin', AuthHandler.login);
 
 app.get('/loans', authorize, authenticate, LoansHandler.reqLoan);
 
-app.post('/loans', authorize, authenticate, LoansHandler.applyForLoan);
+app.post('/loans', authorize, authenticate, validator.validateLoanApp, LoansHandler.applyForLoan);
 
 app.get('/loans/:id/repayments', authorize, authenticate, viewLoanHistory.viewLoanHistory);
 

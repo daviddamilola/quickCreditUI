@@ -1,10 +1,12 @@
 import Loan from '../models/loans/Loan';
 import loans from '../models/loans/loansDb';
 import users from '../models/usersDb';
+import resfunc from './userController';
 
-class LoansHandler {
+const { response } = resfunc;
+class LoansController {
   /**
- * checks for payload presence if no paylooad auth has failed.
+ * checks for payload presence if no payload auth has failed.
  *
  * @param {res} the response object, pay load is in res.locals.payload
  * @return {true} .
@@ -34,92 +36,94 @@ class LoansHandler {
   /**
  * handles get request for the loan resource.
  *
- * @param {number} d The desired diameter of the circle.
- * @return {Circle} The new Circle object.
+ * @param {req, res} the request object and response object.
+ * @return {json} json containing the response.
  */
 
   static reqLoan(req, res) {
-    LoansHandler.checkPayload(res);
+    LoansController.checkPayload(res);
     const decoded = res.locals.payload;
     const targetUser = users.find(user => user.email === decoded.payload.email);
     if (req.query.repaid === 'true' && req.query.status === 'verified') {
-      return LoansHandler.repaidLoans(targetUser, res);
+      return LoansController.repaidLoans(targetUser, res);
     }
     if (req.query.repaid === 'false' && req.query.status === 'verified') {
-      return LoansHandler.partiallyPaid(targetUser, res);
+      return LoansController.partiallyPaid(targetUser, res);
     }
     if (targetUser.isAdmin === true && req.method === 'GET') {
-      LoansHandler.returnData(res, loans);
+      LoansController.returnData(res, loans);
     }
-    return LoansHandler.returnData(res, { message: 'welcome to the apply page' });
+    return LoansController.returnData(res, { message: 'welcome to the apply page' });
   }
 
   /**
- * validates the request Body.
+ * finds an existing loan.
  *
- * @param {req, res} the request object, the response object.
- * @return {true} inputs are correct.
+ * @param {loansdb, email} the database to look in and the email to look for
+ * @return {loan} The specific loan.
  */
-  // static validateBody(req, res) {
-  //   const result = validate.validateLoanApp(req.body);
-  //   if (result.error) {
-  //     return res.status(406).json({
-  //       status: 406,
-  //       error: result.error,
-  //     });
-  //   }
-  //   return true;
-  // }
+  static findExistLoan(loansdb, email) {
+    return loansdb.find(ex => ex.email === email && ex.repaid === false);
+  }
+
+  /**
+ * send an error response
+ *
+ * @param {res, status, error} the database to look in and the email to look for
+ * @return {json} json containing error and status code
+ */
+  static errResponse(res, status, error) {
+    return res.json({
+      status,
+      error,
+    });
+  }
+
+  /**
+ * prevents an unknown user from accessing loans
+ *
+ * @param {res, email} the response object and the user email
+ * @return {user} The specific user.
+ */
+  static prevUnknownUser(res, email) {
+    const user = users.find(exists => exists.email === email);
+    if (!user) {
+      return LoansController.errResponse(res, 404, 'no such user');
+    }
+    return user;
+  }
+  /**
+ * makes a loan application.
+ *
+ * @param {req, res} the request and response object
+ * @return {json} returns json containing loan info
+ */
 
   static applyForLoan(req, res) {
     const { tenor, amount } = req.body;
-    LoansHandler.validateBody(req, res);
-    // TODO get email from payload instead of requesting email
-    const decoded = res.locals.payload;
-    const { email } = decoded.payload;
-
-    const user = users.find(exists => exists.email === email);
-    // if non existent user
-    if (!user) {
-      return res.json({
-        status: 404,
-        error: 'no user with that email',
-      });
-    }
-
-    // user should only apply one loan at a time
-<<<<<<< HEAD
-    const loan = loans
-      .find(existingloan => existingloan.email === email && existingloan.repaid === false);
-=======
-    const loan = loans.find(existingloan => existingloan.email === email && existingloan.repaid === false);
->>>>>>> 49fc9781f31816f8f0901295ed8da6bde7c875d9
+    const { locals: { payload: { payload: email } } } = res;
+    const user = LoansController.prevUnknownUser(res, email);
+    const loan = LoansController.findExistLoan(loans, email);
     if (loan) {
-      return res.json({
-        status: 409,
-        error: 'you have an existing loan application',
-      });
+      return LoansController.errResponse(res, 409, 'existing application');
     }
-    // make new application
     const application = new Loan(email, tenor, amount);
     loans.push(application);
 
     const { firstName, lastName } = user;
-    return res.json({
-      status: 201,
-      data: {
-        loanId: application.id,
-        firstName,
-        lastName,
-        email: application.email,
-        tenor: application.tenor,
-        amount: application.amount,
-        paymentInstallment: application.paymentInstallment,
-        status: application.status,
-        balance: application.balance,
-        interest: application.interest,
-      },
-    });
+    const data = {
+      loanId: application.id,
+      firstName,
+      lastName,
+      email: application.email,
+      tenor: application.tenor,
+      amount: application.amount,
+      paymentInstallment: application.paymentInstallment,
+      status: application.status,
+      balance: application.balance,
+      interest: application.interest,
+    };
+    return response(res, 201, data);
   }
   /**
  * Checks if a user is admin.
@@ -145,22 +149,22 @@ class LoansHandler {
  * @return {clientResponse} returns the client response.
  */
   static repaidLoans(targetUser, res) {
-    LoansHandler.checkIfAdmin(targetUser);
+    LoansController.checkIfAdmin(targetUser);
     const repaid = loans.filter(
       loan => loan.status === 'verified' && loan.repaid === true,
     );
-    const clientResponse = LoansHandler.returnData(res, repaid);
+    const clientResponse = LoansController.returnData(res, repaid);
     return clientResponse;
   }
 
   /**
- * get repaid loans.
+ * get partially paid loans.
  *
  * @param {targetUser, res} the user to check, the response object.
  * @return {clientResponse} returns the client response.
  */
   static partiallyPaid(targetUser, res) {
-    LoansHandler.checkIfAdmin(targetUser);
+    LoansController.checkIfAdmin(targetUser);
     const partiallyPaid = loans.filter(
       loan => loan.status === 'verified' && loan.repaid === false,
     );
@@ -170,9 +174,9 @@ class LoansHandler {
         error: 'no user has partially paid',
       });
     }
-    return LoansHandler.returnData(res, partiallyPaid);
+    return LoansController.returnData(res, partiallyPaid);
   }
 }
 
 
-export default LoansHandler;
+export default LoansController;

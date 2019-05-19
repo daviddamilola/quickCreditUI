@@ -73,5 +73,12 @@ class Validator {
       .then(() => next())
       .catch(errors => res.json({ status: 400, error: errors.map(err => err.msg) }));
   }
+
+  static checkQuery(req, res, next) {
+    req.checkParams('loanId', 'query :id can only be an integer number').isInt();
+    req.asyncValidationErrors()
+      .then(() => next())
+      .catch(errors => res.json({ status: 400, error: errors.map(err => err.msg) }));
+  }
 }
 export default Validator;

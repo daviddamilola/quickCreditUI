@@ -100,3 +100,36 @@ describe('admin can approve or reject loan application', () => {
       });
   });
 });
+
+describe('admin can get specific loan application', () => {
+  it('should have the required request parameter', (done) => {
+    supertest(server)
+      .get('/api/v1/loans/e')
+      .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJlbWFpbCI6IndvcmtzNEBnbWFpbC5jb20iLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE1NTc2NTkxNDAsImV4cCI6MTU1NzgzMTk0MH0.iiD2pjnnIPja5iwAbCD1gmtpyZkRp6h6h5KGFpa7Inw')
+      .end((err, res) => {
+        expect(res.body.status).to.be.equal(400);
+        expect(res.body).haveOwnProperty('error');
+        done();
+      });
+  });
+  it('should return a specific loan to user', (done) => {
+    supertest(server)
+      .get('/api/v1/loans/1')
+      .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJlbWFpbCI6IndvcmtzNEBnbWFpbC5jb20iLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE1NTc2NTkxNDAsImV4cCI6MTU1NzgzMTk0MH0.iiD2pjnnIPja5iwAbCD1gmtpyZkRp6h6h5KGFpa7Inw')
+      .end((err, res) => {
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body.data).to.be.an.instanceOf(Object);
+        done();
+      });
+  });
+  it('should return error for loanId that does not exist', (done) => {
+    supertest(server)
+      .get('/api/v1/loans/0')
+      .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJlbWFpbCI6IndvcmtzNEBnbWFpbC5jb20iLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE1NTc2NTkxNDAsImV4cCI6MTU1NzgzMTk0MH0.iiD2pjnnIPja5iwAbCD1gmtpyZkRp6h6h5KGFpa7Inw')
+      .end((err, res) => {
+        expect(res.body.status).to.be.equal(404);
+        expect(res.body).to.haveOwnProperty('error');
+        done();
+      });
+  });
+});

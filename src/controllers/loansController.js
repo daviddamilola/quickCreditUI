@@ -242,7 +242,15 @@ class LoansController {
     };
     return data;
   }
-}
 
+  static viewSpecificLoan(req, res) {
+    const { params: { loanId } } = req;
+    const targetLoan = loans.find(loan => loan.id === parseInt(loanId, 10));
+    if (!targetLoan) {
+      return LoansController.errResponse(res, 404, 'no loan with such id');
+    }
+    return LoansController.returnData(res, targetLoan);
+  }
+}
 
 export default LoansController;

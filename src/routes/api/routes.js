@@ -28,4 +28,6 @@ app.get('/loans/:id/repayments', authorize, authenticate, viewLoanHistory.viewLo
 app.patch('/loans/:email/verify', validator.validateLoanApp, authorize, authenticate, AuthHandler.verifyUser);
 
 app.patch('/loans/:loanId', validator.checkstatus, authorize, authenticate, LoansHandler.approveRejectLoan);
+
+app.get('/loans/:loanId', validator.checkQuery, authorize, authenticate, LoansHandler.viewSpecificLoan);
 export default app;

@@ -176,6 +176,72 @@ class LoansController {
     }
     return LoansController.returnData(res, partiallyPaid);
   }
+
+  /**
+* approve or reject loan.
+*
+* @param {req, res} the req object, the response object.
+* @return {clientResponse} returns the client response.
+*/
+  static approveRejectLoan(req, res) {
+    const reqloanId = req.params.loanId;
+    if (typeof (parseInt(reqloanId, 10)) !== 'number') {
+      return LoansController.errResponse(res, 422, 'loanId has to be an integer number');
+    }
+    const { body: { status } } = req;
+    if (status.toLowerCase() !== 'approve') {
+      if (status.toLowerCase() !== 'reject') {
+        return LoansController.errResponse(res, 422, 'the status body must be either approve or reject');
+      }
+    }
+    let data;
+    if (status.toLowerCase() === 'approve') {
+      data = LoansController.approveLoan(req, res);
+    }
+    if (status.toLowerCase() === 'reject') {
+      data = LoansController.rejectLoan(req, res);
+    }
+    return res.json({
+      status: 201,
+      data,
+    });
+  }
+
+  static rejectLoan(req) {
+    const reqloanId = req.params.loanId;
+    const targetLoan = loans.find(loan => loan.id === parseInt(reqloanId, 10));
+    targetLoan.status = 'rejected';
+    const {
+      id, amount, tenor, status, monthlyInstallment, interest,
+    } = targetLoan;
+    const data = {
+      loanId: id,
+      loanAmount: amount,
+      tenor,
+      status,
+      monthlyInstallment,
+      interest,
+    };
+    return data;
+  }
+
+  static approveLoan(req) {
+    const reqloanId = req.params.loanId;
+    const targetLoan = loans.find(loan => loan.id === parseInt(reqloanId, 10));
+    targetLoan.status = 'approved';
+    const {
+      id, amount, tenor, status, monthlyInstallment, interest,
+    } = targetLoan;
+    const data = {
+      loanId: id,
+      loanAmount: amount,
+      tenor,
+      status,
+      monthlyInstallment,
+      interest,
+    };
+    return data;
+  }
 }
 
 

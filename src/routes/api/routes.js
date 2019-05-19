@@ -26,4 +26,6 @@ app.post('/loans', authorize, authenticate, validator.validateLoanApp, LoansHand
 app.get('/loans/:id/repayments', authorize, authenticate, viewLoanHistory.viewLoanHistory);
 
 app.patch('/loans/:email/verify', validator.validateLoanApp, authorize, authenticate, AuthHandler.verifyUser);
+
+app.patch('/loans/:loanId', validator.checkstatus, authorize, authenticate, LoansHandler.approveRejectLoan);
 export default app;

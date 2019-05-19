@@ -53,3 +53,50 @@ describe('GET /api/v1/loans/:id/repayments users should be able to view repaid l
       });
   });
 });
+
+describe('admin can approve or reject loan application', () => {
+  it('should have required request parameter', (done) => {
+    supertest(server)
+      .patch('/api/v1/loans/em')
+      .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJlbWFpbCI6IndvcmtzNEBnbWFpbC5jb20iLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE1NTc2NTkxNDAsImV4cCI6MTU1NzgzMTk0MH0.iiD2pjnnIPja5iwAbCD1gmtpyZkRp6h6h5KGFpa7Inw')
+      .send({ status: 'approve' })
+      .end((err, res) => {
+        expect(res.body.status).to.be.equal(400);
+        expect(res.body).to.haveOwnProperty('error');
+        done();
+      });
+  });
+  it('status should not be empty', (done) => {
+    supertest(server)
+      .patch('/api/v1/loans/em')
+      .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJlbWFpbCI6IndvcmtzNEBnbWFpbC5jb20iLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE1NTc2NTkxNDAsImV4cCI6MTU1NzgzMTk0MH0.iiD2pjnnIPja5iwAbCD1gmtpyZkRp6h6h5KGFpa7Inw')
+      .send({ status: undefined })
+      .end((err, res) => {
+        expect(res.body.status).to.be.equal(400);
+        expect(res.body).to.haveOwnProperty('error');
+        done();
+      });
+  });
+  it('should verify a loan application', (done) => {
+    supertest(server)
+      .patch('/api/v1/loans/1')
+      .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJlbWFpbCI6IndvcmtzNEBnbWFpbC5jb20iLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE1NTc2NTkxNDAsImV4cCI6MTU1NzgzMTk0MH0.iiD2pjnnIPja5iwAbCD1gmtpyZkRp6h6h5KGFpa7Inw')
+      .send({ status: 'approve' })
+      .end((err, res) => {
+        expect(res.body.status).to.be.equal(201);
+        expect(res.body.data.status).to.be.equal('approved');
+        done();
+      });
+  });
+  it('should reject a loan application', (done) => {
+    supertest(server)
+      .patch('/api/v1/loans/1')
+      .set('Authorization', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJlbWFpbCI6IndvcmtzNEBnbWFpbC5jb20iLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE1NTc2NTkxNDAsImV4cCI6MTU1NzgzMTk0MH0.iiD2pjnnIPja5iwAbCD1gmtpyZkRp6h6h5KGFpa7Inw')
+      .send({ status: 'reject' })
+      .end((err, res) => {
+        expect(res.body.status).to.be.equal(201);
+        expect(res.body.data.status).to.be.equal('rejected');
+        done();
+      });
+  });
+});

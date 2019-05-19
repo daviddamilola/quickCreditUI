@@ -26,7 +26,7 @@ class Validator {
       .isLength({ max: 90 });
     req.asyncValidationErrors()
       .then(() => next())
-      .catch(errors => res.json({ status: 400, message: errors.map(err => err.msg) }));
+      .catch(errors => res.json({ status: 400, error: errors.map(err => err.msg) }));
   }
 
   static validateSignin(req, res, next) {
@@ -43,7 +43,7 @@ class Validator {
       .isLength({ max: 20 });
     const errors = req.ValidationErrors;
     if (errors) {
-      res.json({ status: 400, message: errors.map(err => err.msg) });
+      res.json({ status: 400, error: errors.map(err => err.msg) });
     }
     console.log(req.body.email);
     return next();
@@ -54,15 +54,24 @@ class Validator {
       .isLength({ min: 1 })
       .isLength({ max: 12 });
     req.checkBody('email', 'enter a valid email').not().isEmpty().isEmail();
-    req.checkBody('amount', 'enter a valid amount less than 100,000 ').not.isEmpty().isNumeric()
+    req.checkBody('amount', 'enter a valid amount less than 100,000 ').not().isEmpty().isNumeric()
       .isLength({ min: 1 })
       .isLength({ max: 100000 });
     const errors = req.ValidationErrors;
     if (errors) {
-      res.json({ status: 400, message: errors.map(err => err.msg) });
+      res.json({ status: 400, error: errors.map(err => err.msg) });
     }
     console.log(req.body.email);
     return next();
+  }
+
+  static checkstatus(req, res, next) {
+    req.checkBody('status', 'status cannot be empty & must be either approve or reject')
+      .not().isEmpty().isAlpha();
+    req.checkParams('loanId', 'query :id can only be an integer number').isInt();
+    req.asyncValidationErrors()
+      .then(() => next())
+      .catch(errors => res.json({ status: 400, error: errors.map(err => err.msg) }));
   }
 }
 export default Validator;

@@ -30,4 +30,6 @@ app.patch('/loans/:email/verify', validator.validateLoanApp, authorize, authenti
 app.patch('/loans/:loanId', validator.checkstatus, authorize, authenticate, LoansHandler.approveRejectLoan);
 
 app.get('/loans/:loanId', validator.checkQuery, authorize, authenticate, LoansHandler.viewSpecificLoan);
+
+app.post('/loans/:loanId', validator.checkQuery, authorize, authenticate, LoansHandler.makeRepayment);
 export default app;

@@ -4,10 +4,10 @@ import repaymentDb from './repaymentDb';
 const { genid } = utils;
 class Repayment {
   constructor(loanId, amount) {
-    this.id = genid(repaymentDb.length);
-    this.createdOn = Repayment.setDate;
+    this.id = genid(repaymentDb.length + 1);
+    this.createdOn = Repayment.setDate();
     this.loanId = loanId;
-    this.amount = amount;
+    this.amountPaid = amount;
   }
 
   static setDate() {

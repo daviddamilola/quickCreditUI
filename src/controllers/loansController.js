@@ -2,6 +2,7 @@ import Loan from '../models/loans/Loan';
 import loans from '../models/loans/loansDb';
 import users from '../models/usersDb';
 import resfunc from './userController';
+import Repayment from '../models/repayments/Repayments';
 
 const { response } = resfunc;
 class LoansController {
@@ -250,6 +251,55 @@ class LoansController {
       return LoansController.errResponse(res, 404, 'no loan with such id');
     }
     return LoansController.returnData(res, targetLoan);
+  }
+
+  static makeRepayment(req, res) {
+    LoansController.checkPayload(res);
+    LoansController.checkIfAdmin();
+    const { locals: { payload: { payload: email } } } = res;
+    const { params: { loanId } } = req;
+    const { body: { amountPaid } } = req;
+    const targetLoan = loans.find(loan => loan.id === parseInt(loanId, 10));
+    if (!targetLoan) {
+      LoansController.errResponse(res, 404, 'no loan with that id');
+    }
+    if (targetLoan.repaid === true && targetLoan.balance > 0) {
+      return res.json({
+        status: 400,
+        error: 'you dont have any outsanding loan',
+      });
+    }
+    LoansController.verifyTransactionId();
+    const newRepayment = new Repayment(loanId, amountPaid);
+    const newBalance = targetLoan.balance - newRepayment.amountPaid;
+    if (newBalance === 0) {
+      targetLoan.repaid = true;
+      targetLoan.balance = newBalance;
+      return res.json({
+        status: 201,
+        data: {
+          targetLoan,
+          message: 'payment complete, you can apply for another loan',
+        },
+      });
+    }
+    targetLoan.balance = newBalance;
+    return res.json({
+      status: 201,
+      data: {
+        id: newRepayment.id,
+        loanId: targetLoan.id,
+        createdOn: newRepayment.createdOn,
+        amount: targetLoan.amount,
+        monthlyInstallment: targetLoan.paymentInstallment,
+        paidAmount: newRepayment.amountPaid,
+        balance: targetLoan.balance,
+      },
+    });
+  }
+
+  static verifyTransactionId() {
+    return true;
   }
 }
 

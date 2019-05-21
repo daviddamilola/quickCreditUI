@@ -1,7 +1,9 @@
 import users from '../models/usersDb';
 import Util from '../utils/utills';
-import NewUser from '../models/newuser';
+import User from '../models/newuser';
 import Authenticate from '../middleware/auth';
+import queries from '../models/queryModel';
+import pg from '../database app/pg';
 
 class userController {
   /**
@@ -56,27 +58,41 @@ class userController {
  * @param {req, res} req: request object, res: response object
  * @return {false} .
  */
-  static createUser(req, res) {
+  static async createUser(req, res) {
+    console.log(req.body);
     const {
       body: {
-        password, email, firstName, lastName, address,
+        password, email, firstName, lastName, address, phonenumber, bvn,
       },
     } = req;
+
     const hashpassword = Util.hashPassword(password);
-    const userToBeCreated = new NewUser(email, firstName, lastName, hashpassword, address);
-    if (!userController.checkExistingUser(res, email)) { users.push(userToBeCreated); }
-    const token = Authenticate.makeToken(
-      userToBeCreated.id, userToBeCreated.email, userToBeCreated.isAdmin,
-    );
-    const data = {
-      token,
-      id: userToBeCreated.id,
-      firstName: userToBeCreated.firstname,
-      lastName: userToBeCreated.lastname,
-      email: userToBeCreated.email,
-      createdOn: userToBeCreated.dateCreated,
-    };
-    return userController.response(res, 201, data);
+    const hashbvn = Util.hashPassword(bvn);
+    const user = new User(email, firstName, lastName, hashpassword, address, phonenumber, hashbvn);
+    try {
+      const { rows } = await pg.query(queries.createuser, [user.firstname,
+      user.lastname, user.password, user.email, user.address,
+      user.phonenumber, user.bvn, user.isAdmin, user.status]);
+      console.log(rows);
+      const token = Authenticate.makeToken(
+        rows[0].id, rows[0].email, rows[0].isAdmin, rows[0].email, rows[0].phonenumber,
+      );
+      const data = {
+        token,
+        firstName: user.firstname,
+        lastName: user.lastname,
+        createdOn: user.dateCreated,
+      };
+      return userController.response(res, 201, data);
+    } catch (error) {
+      console.log(error);
+      if (error.routine === '_bt_check_unique') {
+        return res.json({
+          status: 409,
+          error: 'user exists!',
+        });
+      }
+    }
   }
 
   /**
@@ -98,27 +114,26 @@ class userController {
  * @param { req, res } req: the request object, res: the response object
  * @return {user} .
  */
-  static verifyUserDetails(req, res) {
+  static async verifyUserDetails(req, res) {
     const { email, password } = req.body;
-    const user = users.find(
-      existing => existing.email === email,
-    );
-    if (!(user)) {
+    const userQuery = `SELECT firstname, lastname, email, id, password, isadmin FROM users `;
+    const { rows } = await pg.query(userQuery);
+    const targetUser = rows.find(each => each.email === email);
+    if (!(targetUser)) {
       const error = {
         status: 400,
         error: 'user does not exist',
       };
       return error;
     }
-    const userPass = Util.comparePassword(password, user.password);
+    const userPass = Util.comparePassword(password, targetUser.password);
     if (!(userPass)) {
       return res.status(404).json({
         status: 400,
         error: 'wrong password',
       });
     }
-
-    return user;
+    return targetUser;
   }
 
   /**
@@ -127,8 +142,9 @@ class userController {
  * @param { req, res } req: the request object, res: the response object
  * @return {json} .
  */
-  static login(req, res) {
-    const user = userController.verifyUserDetails(req, res);
+  static async login(req, res) {
+    const user = await userController.verifyUserDetails(req, res);
+    console.log(user);
     if (user.error) {
       return res.json({
         status: 404,
@@ -152,15 +168,21 @@ class userController {
  * @param { req, res } req: the request object, res: the response object
  * @return {json} .
  */
-  static verifyUser(req, res) {
-    const targetUser = users.find(user => user.email === req.params.email);
+  static async verifyUser(req, res) {
+    const { params: { email } } = req;
+    const userQuery = `SELECT firstname, lastname, email, id, password, isadmin, status FROM users `;
+    const { rows } = await pg.query(userQuery);
+    const targetUser = rows.find(each => each.email === email);
     if (targetUser === undefined) {
       return res.json({
         status: 404,
         error: 'no user with that email',
       });
     }
-    targetUser.status = 'verified';
+    const verifyQuery = `UPDATE users WHERE id = ${targetUser.id} SET status = verified RETURNING *`;
+    const result = await pg.query(verifyQuery);
+    console.log(result.rows);
+    // targetUser.status = 'verified';
     const data = {
       email: targetUser.email,
       firstname: targetUser.firstName,

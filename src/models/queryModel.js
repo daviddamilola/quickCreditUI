@@ -42,6 +42,7 @@ const userQueryModel = {
                   `,
 
   createuser: 'INSERT INTO users (firstname, lastname, password, email, address,phonenumber, bvn, isadmin, status) VALUES ($1, $2, $3, $4, $5,$6,$7,$8,$9) RETURNING *',
+
 };
 
 export default userQueryModel;

@@ -15,33 +15,48 @@
     <div class=" col-12 row row__Spread">
         <aside class="sidebar col-2">
             <div class="logo row col__Center">
-                <h1>QuickCredit</h1>
+                <a href="./index.html">
+                    <h1>QuickCredit</h1>
+                </a>
             </div>
             <hr class="">
             <div class="sideNav col row__spread col__Center">
                 <div>
-                    <ul class="">
+                    <ul class="tab">
                         <li class="sideNavItem ">
-                            <a href="" id="verify">Verify Clients</a>
+                            <button class=" tablinks" onclick="openTab(event, verify)">
+                                Verify Clients
+                            </button>
                         </li>
                         <li class="sideNavItem ">
-                            <a href="" id="loanApply">Loan Applications</a>
+                            <button class=" tablinks" onclick="openTab(event, applications)">
+                                Loan Application
+                            </button>
                         </li>
                         <li class="sideNavItem ">
-                            <a href="" id="currentLoan">Current loans( Not Repaid )</a>
+                            <button class=" tablinks" onclick="openTab(event, currentloan)">
+                                Current Loans(not repaid)
+                            </button>
                         </li>
                         <li class="sideNavItem ">
-                            <a href="" id="repaid">Repaid Loans</a>
+                            <button class=" tablinks" onclick="openTab(event, repaidloan)">
+                                Repaid Loans
+                            </button>
                         </li>
                         <li class="sideNavItem ">
-                            <a href="" id="repayForClient">Repay For Client</a>
+                            <button class=" tablinks" onclick="openTab(event, repay4client)">
+                                Repay For Client
+                            </button>
                         </li>
                     </ul>
                 </div>
                 <div>
                     <ul class="">
                         <li class="sideNavItem ">
-                            <a href="./signin.html">Log Out</a>
+                            <button class=" tablinks">
+                                <a href="./signin.html">Log Out</a>
+                            </button>
+
                         </li>
                     </ul>
                 </div>
@@ -88,31 +103,42 @@
             <div id="mySidenav" class="sidenav paddinglr">
                 <a href="javascript:void(0)" class="closebtn">&times;</a>
                 <ul>
-
                     <li class="sideNavItem ">
-                        <a href="" id="verify_s">Verify Clients</a>
+                        <button class=" tablinks" onclick="openTab(event, verify)">
+                            Verify Clients
+                        </button>
                     </li>
                     <li class="sideNavItem ">
-                        <a href="" id="loanApply_s">Loan Applications</a>
+                        <button class=" tablinks" onclick="openTab(event, applications)">
+                            Loan Application
+                        </button>
                     </li>
                     <li class="sideNavItem ">
-                        <a href="" id="currentLoan_s">Current loans( Not Repaid )</a>
+                        <button class=" tablinks" onclick="openTab(event, currentloan)">
+                            Current Loans(not repaid)
+                        </button>
                     </li>
                     <li class="sideNavItem ">
-                        <a href="" id="repaid_s">Repaid Loans</a>
+                        <button class=" tablinks" onclick="openTab(event, repaidloan)">
+                            Repaid Loans
+                        </button>
                     </li>
                     <li class="sideNavItem ">
-                        <a href="" id="repayForClient_s">Repay For Client</a>
+                        <button class=" tablinks" onclick="openTab(event, repay4client)">
+                            Repay For Client
+                        </button>
                     </li>
                     <li class="sideNavItem">
-                        <a href="./apply.html"><button class="btn"> Apply Loan</button></a>
+                        <button class=" tablinks">
+                            <a href="./apply.html">Apply For A Loan</a>
+                        </button>
                     </li>
                 </ul>
             </div>
             <hr class="col-s-12">
             <div id="canvas">
                 <div class="col-12">
-                    <div>
+                    <div id="overview">
                         <div class="row row__spread padding">
                             <div class="col-3 card col col__Center mb-2">
                                 <h1>5</h1>
@@ -128,114 +154,320 @@
                             </div>
                         </div>
                     </div>
+                    <div id="myModal" class="modal col-12 col col__Center">
+
+                        <!-- Modal content -->
+                        <div class="modal-content col-5 ">
+                            <div class="modal-header row row__spread">
+                                <h2 class="col-10">Confirm ?</h2>
+                                <span class="close col-1 col col__Center">&times;</span>
+                            </div>
+                            <div class="modal-body padding col-12 col__Center">
+                                <p>Are You Sure you want to reject ?</p>
+                                <div class="row row__spread">
+                                    <form action="" method="post" class="col-5">
+                                        <button class="btn btnY" type="submit">YES</button>
+                                    </form>
+                                    <div class="col-5">
+                                        <button class="btn btnN">No</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="aModal" class="modal col-12 col col__Center">
+
+                        <!-- Modal content -->
+                        <div class="modal-content col-5 ">
+                            <div class="modal-header row row__spread">
+                                <h2 class="col-10">Confirm ?</h2>
+                                <span class="close2 col-1 col col__Center">&times;</span>
+                            </div>
+                            <div class="modal-body padding col-12 col__Center">
+                                <p>Are You Sure you want to approve ?</p>
+                                <div class="row row__spread">
+                                    <div class="col-5">
+                                        <button class="btn btnY" type="submit">YES</button>
+                                    </div>>
+                                    <div class="col-5">
+                                        <button class="btn btnN">No</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tabcontent" id="verify">
+                        <div class="container col-11">
+                            <div class="card mt-4">
+                                <div class="cardBadge col col__Center">
+                                    VERIFY CLIENTS
+                                </div>
+                                <div class="padding">
+                                    <table class="container  col-11 ">
+                                        <tr>
+                                            <th>Client Id</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Address</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        <tr>
+                                            <td>#123456789</td>
+                                            <td>Lorem</td>
+                                            <td>Ipsum</td>
+                                            <td>2, Lorem ipsum State, Nigeria</td>
+                                            <td>unverified</td>
+                                            <td>
+                                                <div class="row col col__Center padding-s">
+                                                    <button class="tdBtn ml-1">Verify</button>
+                                                    <button class="tdBtn ml-1">Unverify</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#123456789</td>
+                                            <td>Lorem</td>
+                                            <td>Ipsum</td>
+                                            <td>2, Lorem ipsum State, Nigeria</td>
+                                            <td>unverified</td>
+                                            <td>
+                                                <div class="row col__Center padding-s">
+                                                    <button class="tdBtn ml-1">Verify</button>
+                                                    <button class="tdBtn ml-1">Unverify</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tabcontent" id="applications">
+                        <div class="container card mt-4 mb-4" id="apply">
+                            <div class="cardBadge col col__Center">
+                                LOAN APPLICATIONS
+                            </div>
+
+                            <div class="container col-11 col col__Center  pb-2">
+                                <table class=" pb-2">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Address</th>
+                                        <th>Loan Id</th>
+                                        <th>Loan Tenure</th>
+                                        <th>Applied Date</th>
+                                        <th>Loan Status</th>
+                                        <th>Amount Borrowed</th>
+                                        <th colspan="2">Approval</th>
+                                    </tr>
+                                    <tr>
+                                        <td>David Lorem</td>
+                                        <td>10, Lorem Ipsum, Nigeria</td>
+                                        <td>#3443847344</td>
+                                        <td>12 months</td>
+                                        <td>25/04/19</td>
+                                        <td>verified</td>
+                                        <td>#1,0000,000</td>
+                                        <td><a href="" class="approve"><button><img src="./img/approve.png" width="15px"
+                                                        height="13px" alt=""></button></a></td>
+                                        <td><a href="" class="reject"><button class="col col__Center"><img src="./img/reject.png"
+                                                        width="15px" height="13px" alt=""></button></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>David Lorem</td>
+                                        <td>10, Lorem Ipsum, Nigeria</td>
+                                        <td>#3443847344</td>
+                                        <td>12 months</td>
+                                        <td>25/04/19</td>
+                                        <td>verified</td>
+                                        <td>#1,0000,000</td>
+                                        <td><a href="" class="approve"><button><img src="./img/approve.png" width="15px"
+                                                        height="13px" alt=""></button></a></td>
+                                        <td><a href=""><a href="" class="reject"><button class="col col__Center"><img
+                                                            src="./img/reject.png" width="15px" height="13px" alt=""></button></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>David Lorem</td>
+                                        <td>10, Lorem Ipsum, Nigeria</td>
+                                        <td>#3443847344</td>
+                                        <td>12 months</td>
+                                        <td>25/04/19</td>
+                                        <td>verified</td>
+                                        <td>#1,0000,000</td>
+                                        <td><a href="" class="approve"><button><img src="./img/approve.png" width="15px"
+                                                        height="13px" alt=""></button></a></td>
+                                        <td><a href="" class="reject"><button col col__Center"><img src="./img/reject.png"
+                                                        width="15px" height="13px" alt=""></button></a></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- current loan -->
+                    <div class="tabcontent" id="currentloan">
+                        <div class="container card mt-4">
+                            <div class="cardBadge col col__Center">
+                                CURRENT LOAN APPLICATIONS(
+                                Half Paid)
+                            </div>
+                            <div class="pb-2">
+                                <table class="container col-11 mb-2">
+                                    <tr>
+                                        <th>Loan Id</th>
+                                        <th>Loan Tenure</th>
+                                        <th>Applied Date</th>
+                                        <th>Loan Status</th>
+                                        <th>Amount Borrowed</th>
+                                        <th>Total Paid</th>
+                                        <th>Percentage(%) Complete</th>
+                                    </tr>
+                                    <tr>
+                                        <td>#3443847344</td>
+                                        <td>12 months</td>
+                                        <td>25/04/19</td>
+                                        <td>verified</td>
+                                        <td>#1,0000,000</td>
+                                        <td>#800000</td>
+                                        <td>80%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>#3443847344</td>
+                                        <td>12 months</td>
+                                        <td>25/04/19</td>
+                                        <td>verified</td>
+                                        <td>#1,0000,000</td>
+                                        <td>#800000</td>
+                                        <td>80%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>#3443847344</td>
+                                        <td>12 months</td>
+                                        <td>25/04/19</td>
+                                        <td>verified</td>
+                                        <td>#1,0000,000</td>
+                                        <td>#800000</td>
+                                        <td>80%</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="tabcontent" id="repaidloan">
+                        <div class="container card mt-4 mb-4">
+                            <div class="cardBadge col col__Center">
+                                REPAID LOANS
+                            </div>
+                            <div class="pb-2">
+                                <table class="container col-11">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Loan Id</th>
+                                        <th>Loan Tenure</th>
+                                        <th>Applied Date</th>
+                                        <th>Amount Borrowed</th>
+                                        <th>Loan Status</th>
+                                        <th>Total Paid</th>
+                                        <th>Percentage(%) Complete</th>
+                                    </tr>
+                                    <tr>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>100%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>100%</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="tabcontent" id="repay4client">
+                        <div class="container card mt-4">
+                            <div class="cardBadge col col__Center">
+                                CLIENT LOAN REPAYMENT
+                            </div>
+                            <div class="cardBody pb-2">
+                                <form action="">
+                                    <div class="container col-10 applyForm row row__spread">
+                                        <div class="container col-6 col col___Center">
+                                            <div class="inputGrp">
+                                                <label for="clientName">Client Name <span class="required">*</span></label>
+                                                <input type="text" name="clientName" id="clientName" placeholder="enter clients name"
+                                                    required>
+                                            </div>
+                                            <div class="inputGrp">
+                                                <label for="cEmail">client Email Address <span class="required">*</span></label>
+                                                <input type="email" name="cEmail" id="cEmail" placeholder="Clients Email"
+                                                    required>
+                                            </div>
+                                            <div class="inputGrp">
+                                                <label for="loanID">Loan ID <span class="required">*</span></label>
+                                                <input type="text" name="loanID" id="loanID" placeholder="Loan ID"
+                                                    required>
+                                            </div>
+                                            <div class="inputGrp">
+                                                <label for="cEmail">client Email Address <span class="required">*</span></label>
+                                                <input type="email" name="cEmail" id="cEmail" placeholder="Clients Email"
+                                                    required>
+                                            </div>
+                                            <div class="inputGrp">
+                                                <label for="bank">Bank <span class="required">*</span></label>
+                                                <input type="text" name="bank" id="bank" placeholder="bank" required>
+                                            </div>
+                                            <div class="inputGrp">
+                                                <label for="accntType">Account Type <span class="required">*</span></label>
+                                                <input type="text" name="accntType" id="accntType" required>
+                                            </div>
+                                            <div class="col-12 col col__Center">
+                                                <button type="submit" class="btn">Make Payment</button>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </section>
+    </div>
+    </div>
+    </section>
     </div>
     <script>
-        const canvas = document.querySelector("#canvas");
-        const verifyUrl = './markclient.html';
-        const verify = document.getElementById('verify');
-        const verify_s = document.getElementById('verify_s')
-        const loanApply = document.getElementById('loanApply');
-        const loanApply_s = document.getElementById('loanApply_s');
-        const loanApplyUrl = 'loanApply.html';
-        const currentLoan = document.getElementById('currentLoan');
-        const currentLoan_s = document.getElementById('currentLoan_s');
-        const currentLoanUrl = 'currentLoan.html';
-        const repaid = document.getElementById('repaid');
-        const repaid_s = document.getElementById('repaid_s');
-        const repaidUrl = 'repaid.html';
-        const repayForClient = document.getElementById('repayForClient');
-        const repayForClient_s = document.getElementById('repayForClient_s');
-        const repayForClientUrl = 'clientrepay.html';
-        verify.addEventListener('click', (e) => {
-            try {
-                e.preventDefault();
-                fetch(verifyUrl).then(
-                    (response) => {
-                        return response.text()
-                    }
-                ).then((data) => {
-                    canvas.innerHTML = data;
-                })
-            } catch (err) {
-                canvas.innerHTML = err.message;
-            }
-        }, false)
-
-        verify_s.addEventListener('click', (e) => {
-            e.preventDefault();
-            try {
-                fetch(verifyUrl).then(
-                    (response) => {
-                        return response.text()
-                    }
-                ).then((data) => {
-                    canvas.innerHTML = data;
-                })
-            } catch (err) {
-                canvas.innerHTML = err.message;
-            }
-        }, false)
-        currentLoan.addEventListener('click', (e) => {
-            e.preventDefault();
-            fetch(currentLoanUrl)
-                .then((response) => {
-                    return response.text()
-                })
-                .then((data) => {
-                    canvas.innerHTML = data;
-                })
-        }, false)
-        currentLoan_s.addEventListener('click', (e) => {
-            e.preventDefault();
-            fetch(currentLoanUrl)
-                .then((response) => {
-                    return response.text()
-                })
-                .then((data) => {
-                    canvas.innerHTML = data;
-                })
-        }, false)
-        loanApply.addEventListener('click', (e) => {
-            e.preventDefault();
-            fetch(loanApplyUrl)
-                .then((response) => { return response.text() })
-                .then((data) => { canvas.innerHTML = data })
-        }, false)
-        loanApply_s.addEventListener('click', (e) => {
-            e.preventDefault();
-            fetch(loanApplyUrl)
-                .then((response) => { return response.text() })
-                .then((data) => { canvas.innerHTML = data })
-        }, false)
-        repaid.addEventListener('click', (e) => {
-            e.preventDefault();
-            fetch(repaidUrl)
-                .then((response) => { return response.text() })
-                .then((data) => { canvas.innerHTML = data })
-        }, false)
-        repaid_s.addEventListener('click', (e) => {
-            e.preventDefault();
-            fetch(repaidUrl)
-                .then((response) => { return response.text() })
-                .then((data) => { canvas.innerHTML = data })
-        }, false)
-        repayForClient.addEventListener('click', (e) => {
-            e.preventDefault();
-            fetch(repayForClientUrl)
-                .then((response) => { return response.text() })
-                .then((data) => { canvas.innerHTML = data })
-        }, false)
-        repayForClient_s.addEventListener('click', (e) => {
-            e.preventDefault();
-            fetch(repayForClientUrl)
-                .then((response) => { return response.text() })
-                .then((data) => { canvas.innerHTML = data })
-        }, false)
+        const canvas = document.querySelector('#canvas');
+        const overview = document.querySelector('#overview');
+        const tabcontent = document.querySelectorAll('.tabcontent');
+        const showoverview = () => {
+            console.log(clicked);
+            overview.style.display = "block";
+        }
+        function openTab(evt, id) {
+            overview.style.display = "none";
+            tabcontent.forEach(tab => tab.style.display = "none");
+            id.style.display = "block";
+        }
+        overview.style.display = "block";
     </script>
     <script src="js/responsive.js"></script>
+    <script defer src="js/modal.js"></script>
 </body>
 
 </html>

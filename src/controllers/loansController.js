@@ -3,6 +3,9 @@ import loans from '../models/loans/loansDb';
 import users from '../models/usersDb';
 import resfunc from './userController';
 import Repayment from '../models/repayments/Repayments';
+import queries from '../models/queryModel';
+import pg from '../database app/pg';
+
 
 const { response } = resfunc;
 class LoansController {
@@ -100,31 +103,49 @@ class LoansController {
  * @return {json} returns json containing loan info
  */
 
-  static applyForLoan(req, res) {
+  static async applyForLoan(req, res) {
     const { tenor, amount } = req.body;
-    const { locals: { payload: { payload: email } } } = res;
-    const user = LoansController.prevUnknownUser(res, email);
-    const loan = LoansController.findExistLoan(loans, email);
-    if (loan) {
-      return LoansController.errResponse(res, 409, 'existing application');
+    const { locals: { payload: { payload: { email, firstName, lastName, role, status } } } } = res;
+    if (role === 'Admin') {
+      return res.json({
+        status: 403,
+        error: 'Admin cannot apply for loan',
+      });
     }
-    const application = new Loan(email, tenor, amount);
-    loans.push(application);
+    if (status === 'pending') {
+      return res.json({
+        status: 403,
+        error: 'you are not yet verified, wait till you are verified then apply',
+      });
+    }
+    try {
+      const application = new Loan(email, tenor, parseFloat(amount));
+      const {
+        createdOn, userEmail, loanStatus, repaid, loanTenor, loanAmount, paymentInstallment, balance, interest,
+      } = application;
+      const { rows } = await pg.query(queries.createLoanApplication,
+        [createdOn,
+          userEmail, loanStatus, repaid, loanTenor, loanAmount, paymentInstallment, balance, interest]);
 
-    const { firstName, lastName } = user;
-    const data = {
-      loanId: application.id,
-      firstName,
-      lastName,
-      email: application.email,
-      tenor: application.tenor,
-      amount: application.amount,
-      paymentInstallment: application.paymentInstallment,
-      status: application.status,
-      balance: application.balance,
-      interest: application.interest,
-    };
-    return response(res, 201, data);
+      const data = {
+        loanId: rows[0].id,
+        firstName,
+        lastName,
+        email: rows[0].users,
+        tenor: rows[0].tenor,
+        amount: rows[0].amount,
+        paymentInstallment: rows[0].paymentinstallment,
+        status: rows[0].status,
+        balance: rows[0].balance,
+        interest: rows[0].interest,
+      };
+      return response(res, 201, data);
+    } catch (err) {
+      return res.json({
+        status: 400,
+        error: 'an error occured, try again later',
+      });
+    }
   }
   /**
  * Checks if a user is admin.
@@ -253,53 +274,69 @@ class LoansController {
     return LoansController.returnData(res, targetLoan);
   }
 
-  static makeRepayment(req, res) {
+  static async verifyLoan(req, res) {
     LoansController.checkPayload(res);
     LoansController.checkIfAdmin();
-    const { locals: { payload: { payload: email } } } = res;
+
     const { params: { loanId } } = req;
-    const { body: { amountPaid } } = req;
-    const targetLoan = loans.find(loan => loan.id === parseInt(loanId, 10));
-    if (!targetLoan) {
+
+    const loanQuery = `SELECT FROM loans WHERE id = ${parseInt(loanId, 10)}`;
+    const targetLoan = await pg.query(loanQuery);
+    console.log(targetLoan.rows);
+    if (!targetLoan.rows) {
       LoansController.errResponse(res, 404, 'no loan with that id');
     }
-    if (targetLoan.repaid === true && targetLoan.balance > 0) {
+    if (targetLoan.repaid === true && targetLoan.balance < 0) {
       return res.json({
         status: 400,
         error: 'you dont have any outsanding loan',
       });
     }
-    LoansController.verifyTransactionId();
-    const newRepayment = new Repayment(loanId, amountPaid);
-    const newBalance = targetLoan.balance - newRepayment.amountPaid;
-    if (newBalance === 0) {
-      targetLoan.repaid = true;
-      targetLoan.balance = newBalance;
-      return res.json({
-        status: 201,
-        data: {
-          targetLoan,
-          message: 'payment complete, you can apply for another loan',
-        },
-      });
-    }
-    targetLoan.balance = newBalance;
-    return res.json({
-      status: 201,
-      data: {
-        id: newRepayment.id,
-        loanId: targetLoan.id,
-        createdOn: newRepayment.createdOn,
-        amount: targetLoan.amount,
-        monthlyInstallment: targetLoan.paymentInstallment,
-        paidAmount: newRepayment.amountPaid,
-        balance: targetLoan.balance,
-      },
-    });
+    return targetLoan.rows;
   }
 
-  static verifyTransactionId() {
-    return true;
+  static async makeRepayment(req, res) {
+    const { params: { loanId } } = req;
+    const targetLoan = LoansController.verifyLoan(req, res);
+    const { locals: { payload: { payload: email } } } = res;
+    const { body: { amountPaid } } = req;
+    const newRepayment = new Repayment(loanId, amountPaid);
+    const newBalance = targetLoan.balance - newRepayment.amountPaid;
+
+    switch (newBalance) {
+      case 0:
+        targetLoan.repaid = true;
+        targetLoan.balance = newBalance;
+        res.json({
+          status: 201,
+          data: {
+            targetLoan,
+            message: 'payment complete, you can apply for another loan',
+          },
+        });
+        break;
+      case newBalance < 0:
+        res.json({
+          status: 400,
+          error: `you are overpaying your balance is ${targetLoan.balance}`,
+        });
+        break;
+      default:
+        targetLoan.balance = newBalance;
+        res.json({
+          status: 201,
+          data: {
+            id: newRepayment.id,
+            loanId: targetLoan.id,
+            createdOn: newRepayment.createdOn,
+            amount: targetLoan.amount,
+            monthlyInstallment: targetLoan.paymentInstallment,
+            paidAmount: newRepayment.amountPaid,
+            balance: targetLoan.balance,
+          },
+        });
+        break;
+    }
   }
 }
 

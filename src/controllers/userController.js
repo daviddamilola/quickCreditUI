@@ -1,6 +1,7 @@
 import users from '../models/usersDb';
 import Util from '../utils/utills';
 import User from '../models/newuser';
+// import Admin from '../models/Admin';
 import Authenticate from '../middleware/auth';
 import queries from '../models/queryModel';
 import pg from '../database app/pg';
@@ -75,7 +76,7 @@ class userController {
       user.phonenumber, user.bvn, user.isAdmin, user.status]);
       console.log(rows);
       const token = Authenticate.makeToken(
-        rows[0].id, rows[0].email, rows[0].isAdmin, rows[0].email, rows[0].phonenumber,
+        rows[0].id, rows[0].email, rows[0].isAdmin, rows[0].firstname, rows[0].lastname, rows[0].status,
       );
       const data = {
         token,
@@ -116,7 +117,7 @@ class userController {
  */
   static async verifyUserDetails(req, res) {
     const { email, password } = req.body;
-    const userQuery = `SELECT firstname, lastname, email, id, password, isadmin FROM users `;
+    const userQuery = 'SELECT firstname, lastname, email, id, password, isadmin FROM users ';
     const { rows } = await pg.query(userQuery);
     const targetUser = rows.find(each => each.email === email);
     if (!(targetUser)) {
@@ -128,7 +129,7 @@ class userController {
     }
     const userPass = Util.comparePassword(password, targetUser.password);
     if (!(userPass)) {
-      return res.status(404).json({
+      return res.json({
         status: 400,
         error: 'wrong password',
       });
@@ -168,21 +169,15 @@ class userController {
  * @param { req, res } req: the request object, res: the response object
  * @return {json} .
  */
-  static async verifyUser(req, res) {
-    const { params: { email } } = req;
-    const userQuery = `SELECT firstname, lastname, email, id, password, isadmin, status FROM users `;
-    const { rows } = await pg.query(userQuery);
-    const targetUser = rows.find(each => each.email === email);
+  static verifyUser(req, res) {
+    const targetUser = users.find(user => user.email === req.params.email);
     if (targetUser === undefined) {
       return res.json({
         status: 404,
         error: 'no user with that email',
       });
     }
-    const verifyQuery = `UPDATE users WHERE id = ${targetUser.id} SET status = verified RETURNING *`;
-    const result = await pg.query(verifyQuery);
-    console.log(result.rows);
-    // targetUser.status = 'verified';
+    targetUser.status = 'verified';
     const data = {
       email: targetUser.email,
       firstname: targetUser.firstName,

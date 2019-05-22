@@ -30,6 +30,7 @@ const userQueryModel = {
   alterRepaymentTable: `ALTER TABLE repayments 
                       ADD CONSTRAINT fk_repayments_loans FOREIGN KEY (loanid) REFERENCES loans(id);`,
 
+
   createRepaymentTable: `CREATE TABLE IF NOT EXISTS repayments
                   ( id         SERIAL PRIMARY KEY,
                     loanid      int   NOT NULL,
@@ -42,7 +43,7 @@ const userQueryModel = {
                   `,
 
   createuser: 'INSERT INTO users (firstname, lastname, password, email, address,phonenumber, bvn, isadmin, status) VALUES ($1, $2, $3, $4, $5,$6,$7,$8,$9) RETURNING *',
-
+  createLoanApplication: 'INSERT INTO loans (createdon, users, status, repaid, tenor, amount, paymentinstallment, balance, interest) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
 };
 
 export default userQueryModel;

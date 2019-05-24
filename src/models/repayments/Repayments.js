@@ -1,10 +1,5 @@
-import utils from '../../utils/utills';
-import repaymentDb from './repaymentDb';
-
-const { genid } = utils;
 class Repayment {
   constructor(loanId, amount) {
-    this.id = genid(repaymentDb.length + 1);
     this.createdOn = Repayment.setDate();
     this.loanId = loanId;
     this.amountPaid = amount;

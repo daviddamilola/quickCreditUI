@@ -1,6 +1,7 @@
 
 class Validator {
   static validateSignup(req, res, next) {
+    console.log('beginning validation........')
     req.checkBody('email', 'Please enter a valid email').not().isEmpty().isEmail()
       .isLength({ min: 5 })
       .isLength({ max: 50 })
@@ -28,7 +29,6 @@ class Validator {
       .then(() => next())
       .catch(errors => res.json({ status: 400, error: errors.map(err => err.msg) }));
   }
-
   static validateSignin(req, res, next) {
     req.checkBody('email', 'Please enter a valid email').not().isEmpty().isEmail()
       .isLength({ min: 5 })
@@ -41,12 +41,9 @@ class Validator {
       .isEmpty()
       .isAlphanumeric()
       .isLength({ max: 20 });
-    const errors = req.ValidationErrors;
-    if (errors) {
-      res.json({ status: 400, error: errors.map(err => err.msg) });
-    }
-    console.log(req.body.email);
-    return next();
+    req.asyncValidationErrors()
+      .then(() => next())
+      .catch(errors => res.json({ status: 400, error: errors.map(err => err.msg) }));
   }
 
   static validateLoanApp(req, res, next) {
@@ -57,12 +54,9 @@ class Validator {
     req.checkBody('amount', 'enter a valid amount less than 100,000 ').not().isEmpty().isNumeric()
       .isLength({ min: 1 })
       .isLength({ max: 100000 });
-    const errors = req.ValidationErrors;
-    if (errors) {
-      res.json({ status: 400, error: errors.map(err => err.msg) });
-    }
-    console.log(req.body.email);
-    return next();
+    req.asyncValidationErrors()
+      .then(() => next())
+      .catch(errors => res.json({ status: 400, error: errors.map(err => err.msg) }));
   }
 
   static checkstatus(req, res, next) {

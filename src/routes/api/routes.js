@@ -6,7 +6,9 @@ import authenticate from '../../middleware/authenticate';
 import LoansHandler from '../../controllers/loansController';
 import Authorizer from '../../middleware/authorize';
 import validator from '../../middleware/validate';
+import authorizeAsAdmin from '../../middleware/authorizeAsAdmin';
 
+const { checkIfAdmin } = authorizeAsAdmin;
 const { authorize } = Authorizer;
 const app = express.Router();
 
@@ -19,17 +21,17 @@ app.get('/auth/signin', validator.validateSignin, AuthHandler.reqSignin);
 
 app.post('/auth/signin', AuthHandler.login);
 
-app.get('/loans', authorize, authenticate, LoansHandler.reqLoan);
+app.get('/loans', authorize, authenticate, checkIfAdmin, LoansHandler.reqLoan);
 
-app.post('/loans', authorize, authenticate, validator.validateLoanApp, LoansHandler.applyForLoan);
+app.post('/loans', authorize, authenticate, LoansHandler.applyForLoan);
 
 app.get('/loans/:id/repayments', authorize, authenticate, viewLoanHistory.viewLoanHistory);
 
-app.patch('/loans/:email/verify', validator.validateLoanApp, authorize, authenticate, AuthHandler.verifyUser);
+app.patch('/users/:email/verify', authorize, authenticate, checkIfAdmin, AuthHandler.verifyUser);
 
-app.patch('/loans/:loanId', validator.checkstatus, authorize, authenticate, LoansHandler.approveRejectLoan);
+app.patch('/loans/:loanId', validator.checkstatus, authorize, authenticate, checkIfAdmin, LoansHandler.approveRejectLoan);
 
-app.get('/loans/:loanId', validator.checkQuery, authorize, authenticate, LoansHandler.viewSpecificLoan);
+app.get('/loans/:loanId', validator.checkQuery, authorize, authenticate, checkIfAdmin, LoansHandler.viewSpecificLoan);
 
-app.post('/loans/:loanId', validator.checkQuery, authorize, authenticate, LoansHandler.makeRepayment);
+app.post('/loans/:loanId', validator.checkQuery, authorize, authenticate, checkIfAdmin, LoansHandler.makeRepayment);
 export default app;

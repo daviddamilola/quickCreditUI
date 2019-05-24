@@ -1,26 +1,26 @@
-import loans from './loansDb';
-
 class Loan {
   constructor(email, tenor, amount) {
-    this.id = loans.length + 1;
-    this.email = email;
+    this.userEmail = email;
     this.createdOn = Loan.setDate(new Date());
     this.repaid = false;
-    this.tenor = parseInt(tenor, 10);
-    this.amount = parseFloat(amount);
-    this.interest = parseFloat(0.05 * (this.amount));
+    this.loanTenor = parseInt(tenor, 10);
+    this.loanAmount = Number.parseFloat(amount);
+    this.loanStatus = 'pending';
+    this.interest = 0.05 * this.loanAmount;
+    console.log(this.loanAmount, this.loanTenor);
   }
 
   get paymentInstallment() {
-    return (this.amount + this.interest) / this.tenor;
+    return ((this.loanAmount + this.interest) / (this.loanTenor)
+    );
   }
 
   get balance() {
-    return this.amount + this.interest;
+    return this.loanAmount + this.interest;
   }
 
   get balanceInit() {
-    return (this.amount + this.interest);
+    return (this.loanAmount + this.interest);
   }
 
   set balance(newBalance) {
@@ -35,3 +35,4 @@ class Loan {
 }
 
 export default Loan;
+

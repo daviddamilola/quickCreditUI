@@ -25,13 +25,14 @@ app.use(validator());
 // the API routes
 app.use(express.static(path.join('UI')));
 app.use('/', routes);
-app.use('/api/v1/', apiRoutes);
+app.use('/api/v1', apiRoutes);
 
 // routes that dont exist should be caught
 app.use((req, res) => {
   res.status(404);
   res.send('page does not exist');
 });
+
 
 // catch all
 app.use((err, req, res) => {

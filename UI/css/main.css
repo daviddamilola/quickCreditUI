@@ -232,6 +232,12 @@ p{
     background: none;
     border: none;
     outline: none;
+    position: relative;
+    left:-2rem;
+}
+.search img{
+    width: 15px;
+    height: 15px;
 }
 .mainDashboard_s_header{
     display: none;

@@ -16,7 +16,7 @@ const userQueryModel = {
   createLoansTable: `CREATE TABLE IF NOT EXISTS loans
                   ( id         SERIAL PRIMARY KEY,
                   createdon    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                  users        text  NOT NULL,
+                  users        text  UNIQUE NOT NULL,
                   status      text NOT NULL,
                   repaid      boolean NOT NULL DEFAULT false,
                   tenor       int NOT NULL CHECK (tenor <= 12),

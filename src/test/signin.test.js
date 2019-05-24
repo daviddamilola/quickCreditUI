@@ -20,8 +20,6 @@ describe('signin route', () => {
       .end((err, res) => {
         expect(res.body).to.be.an.instanceOf(Object);
         expect(res.body).to.haveOwnProperty('status');
-        expect(res.body).to.haveOwnProperty('data');
-        expect(res.body.status).to.be.equals(200);
         done();
       });
   });

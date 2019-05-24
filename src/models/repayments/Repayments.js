@@ -1,6 +1,3 @@
-import utils from '../../utils/utills';
-import repaymentDb from './repaymentDb';
-
 class Repayment {
   constructor(loanId, amount) {
     this.createdOn = Repayment.setDate();

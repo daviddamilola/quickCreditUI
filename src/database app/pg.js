@@ -8,19 +8,15 @@ let configdb;
 
 if (process.env.NODE_ENV === 'test') {
   configdb = config.testConfig;
-  console.log(`in test config : ${configdb}`);
 }
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV !== 'test') {
   configdb = config.config;
-  console.log(`in dev config : ${configdb}`);
 }
-
 const pool = new Pool(configdb);
 const execute = async () => {
-  console.log(configdb);
   try {
     await pool.connect();
-    console.log('db connected successfully');
+    console.log(`db connected successfully in ${process.env.NODE_ENV} mode`);
   } catch (error) {
     console.error(`oops error occured: ${error}`);
   }

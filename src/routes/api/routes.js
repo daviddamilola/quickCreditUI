@@ -21,13 +21,13 @@ app.get('/auth/signin', validator.validateSignin, AuthHandler.reqSignin);
 
 app.post('/auth/signin', AuthHandler.login);
 
-app.get('/loans', authorize, authenticate, LoansHandler.reqLoan);
+app.get('/loans', authorize, authenticate, checkIfAdmin, LoansHandler.reqLoan);
 
-app.post('/loans', authorize, authenticate, validator.validateLoanApp, LoansHandler.applyForLoan);
+app.post('/loans', authorize, authenticate, LoansHandler.applyForLoan);
 
 app.get('/loans/:id/repayments', authorize, authenticate, viewLoanHistory.viewLoanHistory);
 
-app.patch('/loans/:email/verify', validator.validateLoanApp, authorize, authenticate, checkIfAdmin, AuthHandler.verifyUser);
+app.patch('/users/:email/verify', authorize, authenticate, checkIfAdmin, AuthHandler.verifyUser);
 
 app.patch('/loans/:loanId', validator.checkstatus, authorize, authenticate, checkIfAdmin, LoansHandler.approveRejectLoan);
 

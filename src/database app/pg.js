@@ -1,16 +1,19 @@
 import dotenv from 'dotenv';
 import { Pool } from 'pg';
-import config from './config';
 import queries from '../models/queryModel';
 
 dotenv.config();
 let configdb;
 
 if (process.env.NODE_ENV === 'test') {
-  configdb = config.testConfig;
+  configdb = {
+    connectionString: process.env.TEST_DB_URL,
+  };
 }
 if (process.env.NODE_ENV !== 'test') {
-  configdb = config.config;
+  configdb = {
+    connectionString: process.env.DB_URL,
+  };
 }
 const pool = new Pool(configdb);
 const execute = async () => {

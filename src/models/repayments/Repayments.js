@@ -2,7 +2,7 @@ class Repayment {
   constructor(loanId, amount) {
     this.createdOn = Repayment.setDate();
     this.loanId = loanId;
-    this.amountPaid = amount;
+    this.amountPaid = parseFloat(amount);
   }
 
   static setDate() {

@@ -5,7 +5,6 @@ const userQueryModel = {
                   firstname text NOT NULL,
                   lastname text NOT NULL,
                   phonenumber char(13) UNIQUE NOT NULL,
-                  bvn varchar(100) NOT NULL,
                   password varchar(256) NOT NULL,
                   address varchar(256) NOT NULL,
                   status text NOT NULL,
@@ -42,8 +41,11 @@ const userQueryModel = {
                   amountpaid  float NOT NULL);
                   `,
 
-  createuser: 'INSERT INTO users (firstname, lastname, password, email, address,phonenumber, bvn, isadmin, status) VALUES ($1, $2, $3, $4, $5,$6,$7,$8,$9) RETURNING *',
+  createuser: 'INSERT INTO users (firstname, lastname, password, email, address,phonenumber, isadmin, status) VALUES ($1, $2, $3, $4, $5,$6,$7,$8) RETURNING *',
   createLoanApplication: 'INSERT INTO loans (createdon, users, status, repaid, tenor, amount, paymentinstallment, balance, interest) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
+  insertRepayment: 'INSERT INTO repayments (loanid, createdon, repaid, amount, balance, monthlyinstallment, amountpaid) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *',
+  updateBalance: 'UPDATE loans SET balance = $1 WHERE id = $2 RETURNING balance',
+  updateLoanStatus: 'UPDATE loans SET repaid = $1 WHERE id = $2 RETURNING *',
 };
 
 export default userQueryModel;

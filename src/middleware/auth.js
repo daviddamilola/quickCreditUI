@@ -1,14 +1,14 @@
 
 import jwt from 'jsonwebtoken';
-import config from '../config/config';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const Authenticate = {
   makeToken: (id, email, isAdmin, firstName, lastName, status) => {
-    console.log('parameters =', id, email, isAdmin, firstName, lastName, status);
     const token = jwt.sign({
       id, email, isAdmin, firstName, lastName, status,
-    }, config.secret, { expiresIn: '48h' });
-    console.log('generated token', token);
+    }, process.env.SECRET, { expiresIn: '48h' });
     return token;
   },
 

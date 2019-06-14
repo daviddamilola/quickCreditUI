@@ -1,9 +1,10 @@
 import User from './newuser';
 
 class Admin extends User {
-  constructor(email, firstname, lastname, hashPassword, address, phonenumber, bvn) {
-    super(email, firstname, lastname, hashPassword, address, phonenumber, bvn)
+  constructor(email, firstname, lastname, hashPassword, address, phonenumber) {
+    super(email, firstname, lastname, hashPassword, address, phonenumber)
     super.isAdmin = true;
+    super.status = 'verified';
   }
 }
 

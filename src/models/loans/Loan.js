@@ -4,7 +4,7 @@ class Loan {
     this.createdOn = Loan.setDate(new Date());
     this.repaid = false;
     this.loanTenor = parseInt(tenor, 10);
-    this.loanAmount = Number.parseFloat(amount);
+    this.loanAmount = amount;
     this.loanStatus = 'pending';
     this.interest = 0.05 * this.loanAmount;
     console.log(this.loanAmount, this.loanTenor);

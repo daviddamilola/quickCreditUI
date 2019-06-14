@@ -1,11 +1,11 @@
 import authenticate from './auth';
+import Util from '../utils/utills';
 
 const authenticateUser = (req, res, next) => {
-  console.log('token is ', res.locals.token);
-
   const payload = authenticate.verifyToken(res.locals.token);
-
-  console.log('verified token is', payload);
+  if (payload === null) {
+    return Util.errResponse(res, 500, 'token failed');
+  }
   res.locals.payload = payload;
   next();
 };

@@ -29,6 +29,7 @@ class Validator {
       .then(() => next())
       .catch(errors => res.json({ status: 400, error: errors.map(err => err.msg) }));
   }
+
   static validateSignin(req, res, next) {
     req.checkBody('email', 'Please enter a valid email').not().isEmpty().isEmail()
       .isLength({ min: 5 })

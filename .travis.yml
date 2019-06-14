@@ -10,7 +10,9 @@ cache:
     - node_modules
 before_script:
   - npm install
-  - psql -c 'create database travis_ci_test;' -U postgres
+  - psql -c "CREATE DATABASE quickcredittest;" -U postgres
+env:
+  - SECRET=gwe4rt46556456545gt3456
 script: 
   - npm run test
 after_success:

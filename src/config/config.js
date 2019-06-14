@@ -1,6 +1,10 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 export default {
   development: {
     port: process.env.PORT || 5000,
   },
-  secret: 'gwe4rt46556456545gt3456' || process.env.SECRET,
+  secret: process.env.SECRET,
 };

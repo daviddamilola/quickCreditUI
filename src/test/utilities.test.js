@@ -12,7 +12,7 @@ describe('User', () => {
 
 describe('utilities', () => {
   it('should be an object', (done) => {
-    expect(utils).to.be.an('object');
+    expect(utils).to.be.a('function');
     done();
   });
   it('should have hashpassword and compare password method', (done) => {

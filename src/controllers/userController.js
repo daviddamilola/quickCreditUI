@@ -16,21 +16,7 @@ class userController {
     const data = {
       message: 'welcome to the sign up page',
     };
-    return userController.response(res, 200, data);
-  }
-
-  /**
- * returns a response with the data passed in
- *
- * @param {res, status, data} res: the response object, status code, data to be returned
- * @return {json object} .
- */
-
-  static response(res, status, data) {
-    return res.json({
-      status,
-      data,
-    });
+    return Util.response(res, 200, data);
   }
 
   /**
@@ -42,17 +28,18 @@ class userController {
   static async createUser(req, res) {
     const {
       body: {
-        password, email, firstName, lastName, address, phonenumber, bvn,
+        password, email, firstName, lastName, address, phonenumber,
       },
     } = req;
 
     const hashpassword = Util.hashPassword(password);
-    const hashbvn = Util.hashPassword(bvn);
-    const user = new User(email, firstName, lastName, hashpassword, address, phonenumber, hashbvn);
+    const user = /@quickcredit/.test(email)
+      ? new Admin(email, firstName, lastName, hashpassword, address, phonenumber)
+      : new User(email, firstName, lastName, hashpassword, address, phonenumber);
     try {
       const { rows } = await pg.query(queries.createuser, [user.firstname,
       user.lastname, user.password, user.email, user.address,
-      user.phonenumber, user.bvn, user.isAdmin, user.status]);
+      user.phonenumber, user.isAdmin, user.status]);
       console.log(`query returned ${rows[0]}`);
       console.log('making token ....');
       console.log(user.isAdmin);
@@ -67,7 +54,7 @@ class userController {
         lastName: user.lastname,
         createdOn: user.dateCreated,
       };
-      userController.response(res, 201, data);
+      return Util.response(res, 201, data);
     } catch (error) {
       console.log(error);
       if (error.routine === '_bt_check_unique') {
@@ -93,7 +80,7 @@ class userController {
     const data = {
       message: 'welcome to the sign in page',
     };
-    return userController.response(res, 200, data);
+    return Util.response(res, 200, data);
   }
 
   /**
@@ -156,31 +143,17 @@ class userController {
         firstName: user.firstname,
         lastName: user.lastname,
       };
-      // reuserController.response(res, 200, data);
       return res.json({
         status: 200,
         data,
       });
     } catch (error) {
+      console.log(error);
       return res.json({
         status: 400,
         error: 'an error occured',
       });
     }
-    // try {
-    //   const user = await userController.verifyUserDetails(req, res);
-    //   return res.json({
-    //     status: 200,
-    //     data: {
-    //       mesage: 'logged in user'
-    //     }
-    //   })
-    // } catch (error) {
-    //   return res.json({
-    //     status: 500,
-    //     error,
-    //   })
-    // }
   }
 
   /* gets a user
@@ -199,7 +172,7 @@ class userController {
           error: 'user not found',
         });
       }
-      return userController.response(res, 200, rows[0]);
+      return Util.response(res, 200, rows[0]);
     } catch (error) {
       return res.status(400).json({
         status: 400,

@@ -12,8 +12,6 @@ before_script:
   - npm install
   - psql -c "CREATE DATABASE quickcredittest;" -U postgres
 env:
-  - DB_URL=postgres://postgres:postgres@localhost:5432/quickcredit2
-  - TEST_DB_URL=postgres://postgres:postgres@localhost:5432/quickcredittest
   - SECRET=gwe4rt46556456545gt3456
 script: 
   - npm run test

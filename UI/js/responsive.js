@@ -14,12 +14,6 @@ navbtn.addEventListener('click', () => {
     sideNav.style.display = 'block';
 }, false)
 
-console.log(navBtn_s);
-
-// navBtn_s.addEventListener('click', () => {
-//     sideNav.style.display = 'block';
-// }, false)
-
 closebtn.addEventListener('click', () => {
     sideNav.style.display = 'none';
 }, false)

@@ -58,7 +58,7 @@
           </div>
         </div>
       </div>
-      <div class="mainDashboard_s_header pt">
+      <div class="mainDashboard_s_header pt navbar">
         <div class="row col-s-12 row__spread col__Center">
           <div class="dhead col-s-8 col col__Center row">
             <p>Dashboard | welcome David</p>
@@ -75,22 +75,19 @@
           </div>
         </div>
       </div>
-      <div id="mySidenav" class="sidenav paddinglr">
-        <a href="javascript:void(0)" class="closebtn">&times;</a>
-        <ul>
-          <li class="sideNavItem ">
-            <a href="./apply.html" id="apply4loan">Apply For Loan</a>
-          </li>
-
-          <li class="sideNavItem ">
-            <a href="./history.html">Loan History</a>
-          </li>
-          <li class="sideNavItem ">
-            <a href="./index.html" id="apply4loan">home</a>
-          </li>
-          <li class="links sideNavItem"><a href="./apply.html"><button class="btn"> Apply Loan</button></a></li>
-        </ul>
-      </div>
+      <div class="sidenav-wrapper">
+        <nav id="mySidenav" class="sidenav paddinglr">
+            <a href="javascript:void(0)" class="closebtn">&times;</a>
+            <ul>
+                <li class="sideNavItem ">
+                    <a href="./history.html">History</a>
+                </li>
+                <li class="sideNavItem ">
+                    <a href="./index.html">Home</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
       <hr>
       <div id="canvas">
         <div class="container row">
@@ -100,7 +97,7 @@
             </div>
             <div class="cardBody pb-2">
               <form action="">
-                <div class="container col-10 applyForm row row__spread">
+                <div class="col-10 row row__spread">
                   <div class="container col-6 col col___Center">
                     <div class="inputGrp">
                       <label for="cEmail">Email <span class="required">*</span></label>

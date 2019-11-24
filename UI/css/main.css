@@ -19,9 +19,7 @@ h1,h2,h3,h4,h5,h6 {
 p{
      margin: 0.4rem 0.2rem;
 }
-.text_center{
-   
-}
+
 .caret {
     width: 0; 
     height: 0; 
@@ -167,6 +165,14 @@ p{
     color:#595959;
 }
 
+.sticky{
+    position: fixed;
+    background:#3d3d3d;
+    box-sizing: border-box;
+    top: 0;
+    width: 100%;
+}
+
 .navBtn{
     padding: 0.8rem 0.5rem;
     display: none;
@@ -177,6 +183,7 @@ p{
 .navBtn:active{
     transform: translateY(4px);
 }
+
 
 .line{
     border: 2px solid #F2C744;
@@ -251,8 +258,17 @@ p{
     text-decoration: none;
     color: #fff;
 }
-.sidenav {
+.sidenav-wrapper{
     display: none;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 2147483646;
+    top:0;
+    left:0;
+    background: transparent;
+}
+.sidenav {
     height: 100%;
     width: 50%;
     position: fixed;
@@ -358,7 +374,12 @@ footer{
     [class*="col-"] {
       width: 100%;
     }
-
+    .logo {
+        width: 70%;
+    }
+    .logo > h1{
+        font-size: 1.65em;
+    }
     .access,.nav{
         display: none;
     }

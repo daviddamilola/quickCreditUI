@@ -21,6 +21,18 @@ color: #f2c744;
     background-blend-mode: multiply;
     box-sizing: border-box;
 }
+
+.sideNav-wrapper{
+    display: none;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 2147483646;
+    top:0;
+    left:0;
+    background: transparent;
+}
+
 .sideNav ul{
     padding: 0;
     margin: 0;

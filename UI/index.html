@@ -12,7 +12,7 @@
 
 <body>
     <div id="landingPage">
-        <div class="container logoArea row row__spread">
+        <div class="container logoArea row row__spread navbar">
             <div class="logo">
                 <h1>QuickCredit</h1>
             </div>
@@ -26,21 +26,27 @@
                 <div class="line"></div>
             </div>
         </div>
-        <div id="mySidenav" class="sidenav paddinglr">
-            <a href="javascript:void(0)" class="closebtn">&times;</a>
-            <ul>
-                <li class="sideNavItem ">
-                    <a href="./apply.html" id="apply4loan">Apply For Loan</a>
-                </li>
-                <li class="sideNavItem ">
-                    <a href="/./index.html#services">services</a>
-                </li>
-                <li class="sideNavItem ">
-                    <a href="/./index.html#provide">We Provide</a>
-                </li>
-                <li class="sideNavItem links"><a href="./apply.html"><button class="btn"> Apply For A Loan</button></a></li>
-            </ul>
+        <div class="sidenav-wrapper">
+            <nav id="mySidenav" class="sidenav paddinglr">
+                <a href="javascript:void(0)" class="closebtn">&times;</a>
+                <ul>
+                    <li class="sideNavItem ">
+                        <a href="./apply.html" id="apply4loan">Apply For Loan</a>
+                    </li>
+                    <li class="sideNavItem ">
+                        <a href="./index.html#services">services</a>
+                    </li>
+                    <li class="sideNavItem ">
+                        <a href="./index.html#provide">We Provide</a>
+                    </li>
+                    <li class=" row  row__Spread col__Center sideNavItem">
+                        <a href="./signup.html"><button class="jumbobtn btn ml-1">Sign Up</button></a>
+                        <a href="./signin.html"><button class="jumbobtn btn">Login</button></a>
+                    </li>
+                </ul>
+            </nav>
         </div>
+        
         <nav class=" container nav row row__spread col-11">
             <div class=" col-6 col col__Center navLinks">
                 <ul class="row  container">
@@ -171,6 +177,20 @@
         </div>
 
     </footer>
+    <script>
+const provide = document.querySelector('#provide');
+const stickyElement = provide.offsetTop ;
+const navbar = document.querySelector('.navbar');
+
+    const sticky = () => {
+    if (window.pageYOffset > stickyElement) {
+       navbar.classList.add("sticky")
+      } else {
+        navbar.classList.remove("sticky")
+      }
+}
+document.addEventListener('scroll', sticky, false)
+    </script>
     <script src="./js/responsive.js"></script>
 </body>
 

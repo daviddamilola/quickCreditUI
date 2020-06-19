@@ -4,7 +4,7 @@
   "description": "Quick Credit is an online lending platform that provides short term soft loans to individuals.",
   "main": "server.js",
   "scripts": {
-    "start": "set NODE_ENV=production nodemon --exec babel-node  ./src/server.js",
+    "start": "NODE_ENV=production node  ./dist/server.js",
     "start:dev": "set NODE_ENV=development && nodemon --exec babel-node src/server.js",
     "dev": " nodemon --exec babel-node src/server.js",
     "build": "babel src --out-dir dist",

@@ -8,6 +8,7 @@ import bodyParser from 'body-parser';
 // import config from './config/config';
 import routes from './routes/main';
 import apiRoutes from './routes/api/routes';
+import 'regenerator-runtime/runtime';
 
 dotenv.config();
 const app = express();

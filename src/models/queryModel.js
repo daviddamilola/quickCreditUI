@@ -46,6 +46,7 @@ const userQueryModel = {
   insertRepayment: 'INSERT INTO repayments (loanid, createdon, repaid, amount, balance, monthlyinstallment, amountpaid) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *',
   updateBalance: 'UPDATE loans SET balance = $1 WHERE id = $2 RETURNING balance',
   updateLoanStatus: 'UPDATE loans SET repaid = $1 WHERE id = $2 RETURNING *',
+  selectUser: 'select * from users where email=$1 or phonenumber=$2',
 };
 
 export default userQueryModel;

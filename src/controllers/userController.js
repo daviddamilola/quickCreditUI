@@ -38,16 +38,23 @@ class userController {
       : new User(email, firstName, lastName, hashpassword, address, phonenumber);
     try {
       const { rows } = await pg.query(queries.createuser, [user.firstname,
-      user.lastname, user.password, user.email, user.address,
-      user.phonenumber, user.isAdmin, user.status]);
-      console.log(`query returned ${rows[0]}`);
-      console.log('making token ....');
-      console.log(user.isAdmin);
-      const token = Authenticate.makeToken(
-        rows[0].id, rows[0].email, user.isAdmin, user.firstname, user.lastname, user.status,
-      );
-      console.log(`token made 
-      ${token}`);
+        user.lastname, user.password, user.email, user.address,
+        user.phonenumber, user.isAdmin, user.status]);
+
+      let token = null;
+
+      try {
+        token = Authenticate.makeToken(
+          rows[0].id, rows[0].email, user.isAdmin, user.firstname, user.lastname, user.status,
+        );
+      } catch (error) {
+        console.log(error)
+        return res.json({
+          status: 500,
+          error: 'an error occured',
+        });
+      }
+
       const data = {
         token,
         firstName: user.firstname,
@@ -57,14 +64,8 @@ class userController {
       return Util.response(res, 201, data);
     } catch (error) {
       console.log(error);
-      if (error.routine === '_bt_check_unique') {
-        return res.json({
-          status: 409,
-          error: 'user exists!',
-        });
-      }
-      return res.json({
-        status: 400,
+      return res.status(500).json({
+        status: 500,
         error: 'an error occured',
       });
     }
@@ -92,12 +93,11 @@ class userController {
   static async verifyUserDetails(req) {
     try {
       const { email, password } = req.body;
-      console.log('email is:', email, 'password is: ', password);
+
       const userQuery = 'SELECT * FROM users WHERE email = $1';
       const { rows } = await pg.query(userQuery, [email]);
       const targetUser = rows[0];
-      console.log('target user is: ', targetUser);
-      console.log('email is:', email, 'password is: ', password);
+
       const userPass = Util.comparePassword(password, targetUser.password);
       if (!(userPass)) {
         return {
@@ -131,7 +131,7 @@ class userController {
       const user = await userController.verifyUserDetails(req, res);
       console.log('user before error=', user);
       if (user.error) {
-        return res.json({
+        return res.status(400).json({
           status: 400,
           error: user.error,
         });
@@ -143,14 +143,13 @@ class userController {
         firstName: user.firstname,
         lastName: user.lastname,
       };
-      return res.json({
+      return res.status(200).json({
         status: 200,
         data,
       });
     } catch (error) {
-      console.log(error);
-      return res.json({
-        status: 400,
+      return res.status(500).json({
+        status: 500,
         error: 'an error occured',
       });
     }

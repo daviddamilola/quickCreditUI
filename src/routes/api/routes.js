@@ -1,6 +1,7 @@
 /* eslint linebreak-style: ["error", "windows"] */
 import express from 'express';
 import AuthHandler from '../../controllers/userController';
+import { existingUser, Eligibility, existingLoan } from '../../middleware';
 import authenticate from '../../middleware/authenticate';
 import LoansHandler from '../../controllers/loansController';
 import Authorizer from '../../middleware/authorize';
@@ -16,7 +17,7 @@ const app = express.Router();
 // Auth route.
 app.get('/auth/signup', AuthHandler.reqSignup);
 
-app.post('/auth/signup', validator.validateSignup, AuthHandler.createUser);
+app.post('/auth/signup', validator.validateSignup, existingUser, AuthHandler.createUser);
 
 app.get('/auth/signin', validator.validateSignin, AuthHandler.reqSignin);
 
@@ -24,7 +25,7 @@ app.post('/auth/signin', AuthHandler.login);
 
 app.get('/loans', authorize, authenticate, checkIfAdmin, LoansHandler.reqLoan);
 
-app.post('/loans', authorize, authenticate, prevAdminApply, LoansHandler.applyForLoan);
+app.post('/loans', authorize, authenticate, prevAdminApply, validator.validateLoanApp, Eligibility, existingLoan, LoansHandler.applyForLoan);
 
 app.get('/loans/:loanId/repayments', authorize, authenticate, checkIfAdmin, validator.checkQuery, RepaymentController.viewLoanHistory);
 
@@ -34,5 +35,5 @@ app.patch('/loans/:loanId', validator.checkstatus, authorize, authenticate, chec
 
 app.get('/loans/:loanId', validator.checkQuery, authorize, authenticate, checkIfAdmin, LoansHandler.viewSpecificLoan);
 
-app.post('/loans/:loanId', validator.checkQuery, authorize, authenticate, checkIfAdmin, RepaymentController.makeRepayment);
+app.post('/loans/:loanId', validator.checkQuery, validator.validateRepaymemnt, authorize, authenticate, RepaymentController.makeRepayment);
 export default app;

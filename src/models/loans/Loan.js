@@ -6,25 +6,10 @@ class Loan {
     this.loanTenor = parseInt(tenor, 10);
     this.loanAmount = amount;
     this.loanStatus = 'pending';
-    this.interest = 0.05 * this.loanAmount;
-    console.log(this.loanAmount, this.loanTenor);
-  }
-
-  get paymentInstallment() {
-    return ((this.loanAmount + this.interest) / (this.loanTenor)
-    );
-  }
-
-  get balance() {
-    return this.loanAmount + this.interest;
-  }
-
-  get balanceInit() {
-    return (this.loanAmount + this.interest);
-  }
-
-  set balance(newBalance) {
-    this.balance = newBalance;
+    this.balance = amount + (0.05 * amount);
+    this.interest = 0.05 * amount;
+    this.balanceInit = amount + (0.05 * amount);
+    this.paymentInstallment = (amount + (0.05 * amount)) / tenor;
   }
 
   static setDate(date) {

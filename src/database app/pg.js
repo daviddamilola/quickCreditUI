@@ -12,7 +12,7 @@ if (process.env.NODE_ENV === 'test') {
 }
 if (process.env.NODE_ENV !== 'test') {
   configdb = {
-    connectionString: process.env.DB_URL,
+    connectionString: process.env.DATABASE_URL,
   };
 }
 const pool = new Pool(configdb);
@@ -27,7 +27,15 @@ const execute = async () => {
 execute();
 
 const pg = {
-  query: (...params) => params.length > 1 ? pool.query(params[0], params[1]) : pool.query(params[0]),
+  // eslint-disable-next-line no-confusing-arrow
+  query: async (...params) => {
+    try {
+      const result = await params.length > 1 ? pool.query(params[0], params[1]) : pool.query(params[0]);
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };
 
 const initTables = async () => {

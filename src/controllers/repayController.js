@@ -49,18 +49,19 @@ class RepaymentController {
         return Util.errResponse(res, 403, 'you can only post repayment for your own loan history, use your ID');
       }
       const newBalance = targetLoan.balance - newRepayment.amountPaid;
-      const updateLoanStatus = 'UPDATE loans SET repaid = $1 WHERE id = $2 RETURNING *';
-      const updateRepaidStatus = 'UPDATE repayments SET repaid = $1 WHERE id = $2 RETURNING *';
       if (newBalance < 0) {
         return Util.errResponse(res, 400, `you are overpaying your balance is ${targetLoan.balance}`);
       }
+      const updateLoanStatus = 'UPDATE loans SET repaid = $1 WHERE id = $2 RETURNING *';
+      const updateRepaidStatus = 'UPDATE repayments SET repaid = $1 WHERE id = $2 RETURNING *';
+      
       if (amountPaid < rows[0].paymentinstallment) {
-        return Util.errResponse(res, 409, `you are to pay a minimum of ${rows[0].paymentinstallment} naira`);
+        return Util.errResponse(res, 400, `you are to pay a minimum of ${rows[0].paymentinstallment} naira`);
       }
       const payResult = await pg.query(queries.insertRepayment,
         [newRepayment.loanId, newRepayment.createdOn,
-        targetLoan.repaid, targetLoan.amount, newBalance, targetLoan.paymentinstallment,
-        newRepayment.amountPaid]);
+          targetLoan.repaid, targetLoan.amount, newBalance, targetLoan.paymentinstallment,
+          newRepayment.amountPaid]);
       await pg.query(queries.updateBalance, [newBalance, loanId]);
       if (newBalance === 0) {
         await pg.query(updateLoanStatus, [true, loanId]);

@@ -46,8 +46,8 @@ class LoansController {
       const { email } = res.locals.payload.payload;
       const queryString = 'select * from users where email=$1';
       const { rows } = await pg.query(queryString, [email]);
-      return rows[0].status !== 'verified' || rows[0].status !== 'verified'
-        ? { status: false, text: 'you are not yet verified' }
+      console.log('verified status', rows[0]);
+      return rows[0].status !== 'verified' ? { status: false, text: 'you are not yet verified' }
         : { status: true, text: 'u are free to apply' };
     } catch (error) {
       return false;
@@ -62,10 +62,6 @@ class LoansController {
  */
   static async applyForLoan(req, res) {
     const { tenor, amount } = req.body;
-    const eligibility = await LoansController.checkEligibility(req, res);
-    if (!eligibility.status) {
-      return Util.errResponse(res, 400, eligibility.text);
-    }
     const { email, firstName, lastName } = res.locals.payload.payload;
     try {
       const {
@@ -76,26 +72,17 @@ class LoansController {
         [createdOn, userEmail, loanStatus, repaid, loanTenor, loanAmount,
           paymentInstallment, balance, interest]);
       const data = {
-        loanId: rows[0].id,
         firstName,
         lastName,
-        email: rows[0].users,
-        tenor: rows[0].tenor,
-        amount: rows[0].amount,
-        paymentInstallment: rows[0].paymentinstallment,
-        status: rows[0].status,
-        balance: rows[0].balance,
-        interest: rows[0].interest,
+        ...rows[0],
       };
       return Util.response(res, 201, data);
     } catch (err) {
+      console.log(err);
       if (err.routine === 'ExecConstraints') {
         return Util.errResponse(res, 409, 'tenor must be less than or equal 12');
       }
-      if (err.routine === '_bt_check_unique') {
-        return Util.errResponse(res, 409, 'you have an existing email application');
-      }
-      return true;
+      return Util.errResponse(res, 500, 'internal server error');
     }
   }
 

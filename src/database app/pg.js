@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { Pool } from 'pg';
 import queries from '../models/queryModel';
+import 'regenerator-runtime/runtime';
 
 dotenv.config();
 let configdb;

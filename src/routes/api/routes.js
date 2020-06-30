@@ -36,4 +36,5 @@ app.patch('/loans/:loanId', validator.checkstatus, authorize, authenticate, chec
 app.get('/loans/:loanId', validator.checkQuery, authorize, authenticate, checkIfAdmin, LoansHandler.viewSpecificLoan);
 
 app.post('/loans/:loanId', validator.checkQuery, validator.validateRepaymemnt, authorize, authenticate, RepaymentController.makeRepayment);
+
 export default app;

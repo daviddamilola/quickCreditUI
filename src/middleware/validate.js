@@ -22,9 +22,10 @@ class Validator {
       .isEmpty();
     req.checkBody('password', 'Please supply a valid password')
       .not()
-      .isEmpty()
-      .isAlphanumeric()
-      .isLength({ max: 90 });
+      .isEmpty();
+      
+    req.checkBody('phonenumber', 'phonenumber cannot be empty and must be an integer')
+      .not().isEmpty().isInt();
     req.asyncValidationErrors()
       .then(() => next())
       .catch(errors => res.status(400).json({ status: 400, error: errors.map(err => err.msg) }));
@@ -51,8 +52,7 @@ class Validator {
     req.checkBody('tenor', 'tenor must be number in the range 1-12').not().isEmpty().isNumeric()
       .isLength({ min: 1 })
       .isLength({ max: 12 });
-    req.checkBody('email', 'email should take the form johndoe@example.com').not().isEmpty().isEmail();
-    req.checkBody('amount', 'amount cannot be empty and should be less than 100,000 ').not().isEmpty().isNumeric()
+  req.checkBody('amount', 'amount cannot be empty and should be less than 100,000 ').not().isEmpty().isNumeric()
       .isLength({ min: 1 })
       .isLength({ max: 100000 });
     req.asyncValidationErrors()
@@ -71,7 +71,7 @@ class Validator {
 
   static validateRepaymemnt(req, res, next) {
     req.checkBody('amountPaid', 'amount cannot be empty and must be an integer')
-      .not().isEmpty().isInt();
+      .not().isEmpty().isNumeric();
     req.asyncValidationErrors()
       .then(() => next())
       .catch(errors => res.status(400).json({ status: 400, error: [...new Set(errors.map(err => err.msg))] }));

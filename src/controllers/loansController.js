@@ -5,28 +5,47 @@ import pg from '../database app/pg';
 
 class LoansController {
   /**
- * handles get request for the loan resource.
- *
- * @param {req, res} the request object and response object.
- * @return {json} json containing the response.
- */
+   * handles get request for the loan resource.
+   *
+   * @param {req, res} the request object and response object.
+   * @return {json} json containing the response.
+   */
 
   static async reqLoan(req, res) {
     try {
       Util.checkPayload(res);
       if (req.query.repaid === 'true' && req.query.status === 'approved') {
-        console.log('in repaid');
         return LoansController.repaidLoans(req, res);
       }
       if (req.query.repaid === 'false' && req.query.status === 'approved') {
-        console.log('in part repaid');
         return LoansController.partiallyPaid(req, res);
       }
-      console.log('selecting all...');
-      const allLoansQuery = 'SELECT * FROM loans';
-      const { rows } = await pg.query(allLoansQuery);
-      if (rows.length < 1) {
-        return Util.errResponse(res, 404, 'no loans yet');
+      if (req.query.status === 'pending') {
+        return LoansController.pendingLoans(req, res);
+      }
+
+      const {
+        locals: {
+          payload: {
+            payload: {
+              isAdmin, email,
+            },
+          },
+        },
+      } = res;
+      
+      if (isAdmin) {
+        const query = 'SELECT * FROM loans';
+        const { rows } = await pg.query(query);
+        if (!rows[0]) {
+          return Util.errResponse(res, 404, 'no loans made yet');
+        }
+        return Util.returnData(res, rows);
+      }
+      const query = 'SELECT * FROM loans WHERE users=$1';
+      const { rows } = await pg.query(query, [email]);
+      if (!rows[0]) {
+        return Util.errResponse(res, 404, 'you have not made any loans yet');
       }
       return Util.returnData(res, rows);
     } catch (error) {
@@ -36,11 +55,11 @@ class LoansController {
   }
 
   /**
- * checks if user is eligible to apply.
- *
- * @param {req, res} the request and response object
- * @return {true} returns true
- */
+   * checks if user is eligible to apply.
+   *
+   * @param {req, res} the request and response object
+   * @return {true} returns true
+   */
   static async checkEligibility(req, res) {
     try {
       const { email } = res.locals.payload.payload;
@@ -55,11 +74,11 @@ class LoansController {
   }
 
   /**
- * makes a loan application.
- *
- * @param {req, res} the request and response object
- * @return {json} returns json containing loan info
- */
+   * makes a loan application.
+   *
+   * @param {req, res} the request and response object
+   * @return {json} returns json containing loan info
+   */
   static async applyForLoan(req, res) {
     const { tenor, amount } = req.body;
     const { email, firstName, lastName } = res.locals.payload.payload;
@@ -87,11 +106,11 @@ class LoansController {
   }
 
   /**
- * get repaid loans.
- *
- * @param {req, res} the req object, the response object.
- * @return {clientResponse} returns the client response.
- */
+   * get repaid loans.
+   *
+   * @param {req, res} the req object, the response object.
+   * @return {clientResponse} returns the client response.
+   */
   static async repaidLoans(req, res) {
     const {
       locals: {
@@ -118,11 +137,11 @@ class LoansController {
   }
 
   /**
- * get partially paid loans.
- *
- * @param {targetUser, res} the user to check, the response object.
- * @return {clientResponse} returns the client response.
- */
+   * get partially paid loans.
+   *
+   * @param {targetUser, res} the user to check, the response object.
+   * @return {clientResponse} returns the client response.
+   */
   static async partiallyPaid(req, res) {
     const {
       locals: {
@@ -141,18 +160,18 @@ class LoansController {
       if (rows[0] === undefined) {
         return Util.errResponse(res, 404, 'no partially repaid loans found');
       }
-      return Util.returnData(res, rows[0]);
+      return Util.returnData(res, rows);
     } catch (error) {
       return Util.errResponse(res, 400, `an error occured: ${error}`);
     }
   }
 
   /**
-* approve or reject loan.
-*
-* @param {req, res} the req object, the response object.
-* @return {clientResponse} returns the client response.
-*/
+    * approve or reject loan.
+    *
+    * @param {req, res} the req object, the response object.
+    * @return {clientResponse} returns the client response.
+    */
   static async approveRejectLoan(req, res) {
     const { params: { loanId } } = req;
     const { isAdmin } = res.locals.payload.payload;
@@ -177,11 +196,11 @@ class LoansController {
   }
 
   /**
-* updates status to rejected.
-*
-* @param {req, res} the req object, the response object.
-* @return {data} returns data to the caller.
-*/
+    * updates status to rejected.
+    *
+    * @param {req, res} the req object, the response object.
+    * @return {data} returns data to the caller.
+    */
   static async rejectLoan(req, res) {
     const { params: { loanId } } = req;
     const newStatus = 'rejected';
@@ -196,11 +215,11 @@ class LoansController {
   }
 
   /**
-* updates status to approved.
-*
-* @param {req, res} the req object, the response object.
-* @return {data} returns data to the caller.
-*/
+    * updates status to approved.
+    *
+    * @param {req, res} the req object, the response object.
+    * @return {data} returns data to the caller.
+    */
   static async approveLoan(req, res) {
     const { params: { loanId } } = req;
     const newStatus = 'approved';
@@ -214,25 +233,54 @@ class LoansController {
   }
 
   /**
-* view a specific loan.
-*
-* @param {req, res} the req object, the response object.
-* @return {clientResponse} returns the client response.
-*/
+    * view a specific loan.
+    *
+    * @param {req, res} the req object, the response object.
+    * @return {clientResponse} returns the client response.
+    */
   static async viewSpecificLoan(req, res) {
-    console.log(new Loan('daviddamilola20@gmail.com', 12, parseFloat(500000)));
     const { params: { loanId } } = req;
     const { isAdmin } = res.locals.payload.payload;
     Util.checkIfAdmin(isAdmin, res);
     try {
-      const specificquery = `SELECT * from loans WHERE id = ${parseInt(loanId, 10)}`;
-      const { rows } = await pg.query(specificquery);
-      if (rows[0] === undefined) {
+      const specificquery = 'SELECT * from loans WHERE id = $1';
+      const { rows } = await pg.query(specificquery, [`${parseInt(loanId, 10)}`]);
+      if (!rows[0]) {
         return Util.errResponse(res, 404, 'no loan with provided id');
       }
       return Util.response(res, 200, rows[0]);
     } catch (error) {
-      return Util.errResponse(res, 400, 'an error occured try again');
+      return Util.errResponse(res, 500, 'an error occured try again');
+    }
+  }
+
+  /**
+    * get pending loans.
+    *
+    * @param {req, res} the req object, the response object.
+    * @return {clientResponse} returns the client response.
+    */
+
+  static async pendingLoans(req, res) {
+    const {
+      locals: {
+        payload: {
+          payload: {
+            isAdmin,
+          },
+        },
+      },
+    } = res;
+    if (!isAdmin) return Util.errResponse(res, 401, 'unauthorized');
+    try {
+      const query = 'SELECT * FROM loans WHERE status = $1';
+      const { rows } = await pg.query(query, ['pending']);
+      if (!rows[0]) {
+        return Util.errResponse(res, 404, 'you have no pending loans');
+      }
+      return Util.response(res, 200, rows);
+    } catch (error) {
+      return Util.errResponse(res, 500, 'an error occured try again');
     }
   }
 }

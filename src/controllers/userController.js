@@ -97,25 +97,25 @@ class userController {
       const userQuery = 'SELECT * FROM users WHERE email = $1';
       const { rows } = await pg.query(userQuery, [email]);
       const targetUser = rows[0];
-
+      if (!(targetUser)) {
+        return {
+          status: 400,
+          error: 'invalid email or password',
+        };
+      }
       const userPass = Util.comparePassword(password, targetUser.password);
       if (!(userPass)) {
         return {
           status: 400,
-          error: 'wrong password',
+          error: 'invalid email or password',
         };
       }
       return targetUser;
     } catch (error) {
-      if (error.routine === 'errorMissingColumn') {
-        return {
-          status: 400,
-          error: 'no user with that email',
-        };
-      }
+      console.log(error);
       return {
-        status: 400,
-        error,
+        status: 500,
+        error: 'internal server error',
       };
     }
   }
@@ -131,8 +131,8 @@ class userController {
       const user = await userController.verifyUserDetails(req, res);
       console.log('user before error=', user);
       if (user.error) {
-        return res.status(400).json({
-          status: 400,
+        return res.status(user.status).json({
+          status: user.status,
           error: user.error,
         });
       }
@@ -142,6 +142,7 @@ class userController {
         id: user.id,
         firstName: user.firstname,
         lastName: user.lastname,
+        privi: user.isadmin ? 2 : 1,
       };
       return res.status(200).json({
         status: 200,
@@ -162,9 +163,18 @@ class userController {
   */
   static async getUser(req, res) {
     const userQuery = 'SELECT * FROM USERS WHERE id = $1';
+    const {
+      locals: {
+        payload: {
+          payload: {
+            id,
+          },
+        },
+      },
+    } = res;
     try {
-      const { params: { id } } = req;
-      const { rows } = await pg.query(userQuery, id);
+      // eslint-disable-next-line prefer-destructuring
+      const { rows } = await pg.query(userQuery, [id]);
       if (!rows[0]) {
         return res.json({
           status: 404,
@@ -173,9 +183,34 @@ class userController {
       }
       return Util.response(res, 200, rows[0]);
     } catch (error) {
-      return res.status(400).json({
-        status: 400,
-        error: 'an error occured',
+      console.log(error);
+      return res.status(500).json({
+        status: 500,
+        error: 'internal server error',
+      });
+    }
+  }
+
+  /* gets all users
+  *
+  * @param { req, res } req: the request object, res: the response object
+  * @return {json} .
+  */
+  static async getAllUsers(req, res) {
+    const usersQuery = 'SELECT * FROM users WHERE isadmin = $1';
+    try {
+      const { rows } = await pg.query(usersQuery, [false]);
+      if (!rows[0]) {
+        return res.json({
+          status: 404,
+          error: 'no users on the application 😲',
+        });
+      }
+      return Util.response(res, 200, rows);
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        error: 'internal server error',
       });
     }
   }
@@ -188,6 +223,35 @@ class userController {
   static async verifyUser(req, res) {
     const { params: { email } } = req;
     const newStatus = 'verified';
+    const updateQuery = 'UPDATE users SET status = $1 WHERE email = $2 returning id, email, firstName, lastName, address, status, isAdmin, createdOn, modifiedOn';
+    try {
+      const { rows } = await pg.query(updateQuery, [newStatus, email]);
+      if (!rows[0]) {
+        return res.status(404).json({
+          status: 404,
+          error: 'no records matching email',
+        });
+      }
+      return res.status(200).json({
+        status: 200,
+        data: rows[0],
+      });
+    } catch (err) {
+      return res.status(400).json({
+        status: 400,
+        error: 'error occured, try again',
+      });
+    }
+  }
+
+   /* unverifies a user
+  *
+  * @param { req, res } req: the request object, res: the response object
+  * @return {json} .
+  */
+  static async unVerify(req, res) {
+    const { params: { email } } = req;
+    const newStatus = 'pending';
     const updateQuery = 'UPDATE users SET status = $1 WHERE email = $2 returning id, email, firstName, lastName, address, status, isAdmin, createdOn, modifiedOn';
     try {
       const { rows } = await pg.query(updateQuery, [newStatus, email]);

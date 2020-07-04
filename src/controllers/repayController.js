@@ -30,6 +30,7 @@ class RepaymentController {
     }
   }
 
+
   static async makeRepayment(req, res) {
     try {
       const { params: { loanId } } = req;

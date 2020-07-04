@@ -6,6 +6,7 @@ import util from '../utils/utills';
 export const existingUser = async (req, res, next) => {
   try {
     const response = await pg.query(queries.selectUser, [req.body.email, req.body.phonenumber]);
+    console.log(response.rows.length > 0);
     return response.rows.length > 0 ? util.errResponse(res, 409, { message: 'existing user' }) : next();
   } catch (error) {
     return util.errResponse(res, 500, { message: error });

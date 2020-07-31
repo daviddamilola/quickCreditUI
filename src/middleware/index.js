@@ -31,7 +31,7 @@ export const existingLoan = async (req, res, next) => {
     const { email } = res.locals.payload.payload;
     const queryString = 'select * from loans where users=$1 and repaid=$2';
     const { rows } = await pg.query(queryString, [email, false]);
-    return rows.length > 0 ? res.status(409).json({ status: 409, message: 'existing email application' }) : next();
+    return rows.length > 0 ? res.status(409).json({ status: 409, message: 'existing loan application' }) : next();
   } catch (error) {
     console.log(error)
     return res.status(500).json({ status: 500, message: 'internal server error' });

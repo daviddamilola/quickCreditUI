@@ -79,16 +79,13 @@ class util {
   }
 
   /**
-* Checks if a user is admin.
-*
-* @param {targetUser, res} the user to check, the response object.
-* @return {true} returns true if the user is admin, and an error response otherwise.
-*/
+  * Checks if a user is admin.
+  *
+  * @param {targetUser, res} the user to check, the response object.
+  * @return {true} returns true if the user is admin, and an error response otherwise.
+  */
 
   static checkIfAdmin(isAdmin, res) {
-    console.log('checking if admin ...');
-    console.log('admin is ...' + (isAdmin === true));
-
     if (!isAdmin) {
       return res.json({
         status: 401,
@@ -98,5 +95,14 @@ class util {
     return true;
   }
 }
+
+export const dataReplacer = (template, data) => {
+  const result = template.replace(/{{([^\s]*)}}/g, (match, ...args) => {
+    const prop = args[0];
+    if (!data[prop]) throw new Error(`Error: no property named "${prop}" in provided data`);
+    return data[prop];
+  });
+  return result;
+};
 
 export default util;

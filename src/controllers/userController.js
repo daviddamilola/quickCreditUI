@@ -45,7 +45,7 @@ class userController {
 
       try {
         token = Authenticate.makeToken(
-          rows[0].id, rows[0].email, user.isAdmin, user.firstname, user.lastname, user.status,
+          rows[0].id, rows[0].email, ...user,
         );
       } catch (error) {
         console.log(error)
@@ -142,7 +142,7 @@ class userController {
         id: user.id,
         firstName: user.firstname,
         lastName: user.lastname,
-        privi: user.isadmin ? 2 : 1,
+        privi: user?.isadmin ? 2 : 1,
       };
       return res.status(200).json({
         status: 200,

@@ -45,6 +45,8 @@ const initTables = async () => {
     await pg.query(queries.createLoansTable);
     await pg.query(queries.createRepaymentTable);
     await pg.query(queries.alterRepaymentTable);
+    await pg.query(queries.createNotificationsTable);
+    await pg.query(queries.alterNotificationsTable);
   } catch (error) {
     console.log(`oops error occured: ${error}`);
   }

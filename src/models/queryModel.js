@@ -24,6 +24,16 @@ const userQueryModel = {
                   balance     float NOT NULL,
                   interest    float NOT NULL);
                   `,
+    createNotificationsTable: `CREATE TABLE IF NOT EXISTS notifications
+                      ( id         SERIAL PRIMARY KEY,
+                      createdon    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                      users        text NOT NULL,
+                      detail       text NOT NULL,
+                      read         boolean NOT NULL DEFAULT false,
+                      readTime     TIMESTAMP);
+                      `,
+    alterNotificationsTable: `ALTER TABLE notifications 
+                      ADD CONSTRAINT fk_notifications_users FOREIGN KEY (users) REFERENCES users(email);`,
   alterLoansTable: `ALTER TABLE loans 
                       ADD CONSTRAINT fk_loans_users FOREIGN KEY (users) REFERENCES users(email);`,
   alterRepaymentTable: `ALTER TABLE repayments 
@@ -47,6 +57,10 @@ const userQueryModel = {
   updateBalance: 'UPDATE loans SET balance = $1 WHERE id = $2 RETURNING balance',
   updateLoanStatus: 'UPDATE loans SET repaid = $1 WHERE id = $2 RETURNING *',
   selectUser: 'select * from users where email=$1 or phonenumber=$2',
+  createNotification: 'INSERT INTO  notifications (users, detail) VALUES  ($1, $2)',
+  updateNotification: 'UPDATE notifications SET read=$1 where id=$2',
+  getWhere: 'SELECT * FROM notifications where read=$1 and users=$2 RETURNING *',
+  getAllNotification: 'SELECT * FROM notifications where users=$1',
 };
 
 export default userQueryModel;
